@@ -1,0 +1,12 @@
+[submodule "external/svr_util"]
+	path = external/svr_util
+	url = https://github.com/yiliangwu880/svr_util.git
+[submodule "external/libevent_cpp"]
+	path = external/libevent_cpp
+	url = https://github.com/yiliangwu880/libevent_cpp.git
+[submodule "external/access_svr"]
+	path = external/access_svr
+	url = https://github.com/yiliangwu880/access_svr.git
+[submodule "external/msg_forward"]
+	path = external/msg_forward
+	url = https://github.com/yiliangwu880/msg_forward.git
