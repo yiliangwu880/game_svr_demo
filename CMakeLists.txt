@@ -60,40 +60,25 @@ SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 ADD_SUBDIRECTORY(simulate_client)
 
 
-#自定义命令,依赖关系编译proto
-#
-
+#自定义命令,根据依赖关系导出proto cpp文件
+##################################################
 file(GLOB_RECURSE PROTO_FILES  ${CMAKE_SOURCE_DIR} "proto/*.proto")
 
-
+#对文件列表变量用 STRING(REPLACE 。。。批量改名无效的，因此写个实现
 foreach(element ${PROTO_FILES})
 	message(element=${element})
-	STRING(REPLACE ".proto" ".pb.h" h_element ${element} )
-	set(tt ${tt} ${h_element})
+	STRING(REPLACE ".proto" ".pb.h" h_element ${element} ) #改扩展名
+	STRING(REPLACE "/proto" "/proto_cpp" h_element ${h_element} ) #该路径
+	set(PROTO_CPP_FILES ${PROTO_CPP_FILES} ${h_element})
 endforeach()
 
-
-message(tt=${tt})
+message(PROTO_CPP_FILES=${PROTO_CPP_FILES})
 add_custom_command(
-	OUTPUT ${tt}
+	OUTPUT ${PROTO_CPP_FILES}
 	DEPENDS ${PROTO_FILES}
 	COMMAND sh ./proto/proto_2_cpp.sh
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} #COMMAND 执行目录
-	COMMENT "========build proto to cpp========"
+	COMMENT "========export cpp from proto========"
 )
-add_custom_target(TargetPB ALL DEPENDS ${tt})
-
-
-#ok,但是*.h需要 clear前就有
-#file(GLOB_RECURSE PROTO_FILES  ${CMAKE_SOURCE_DIR} "proto/*.proto")
-#file(GLOB_RECURSE PROTO_CPP_FILES  ${CMAKE_SOURCE_DIR} "proto/*.h")
-#message(PROTO_FILES----=${PROTO_FILES})
-#message(PROTO_CPP_FILES=${PROTO_CPP_FILES})
-#add_custom_command(
-#	OUTPUT ${PROTO_CPP_FILES}
-#	DEPENDS ${PROTO_FILES}
-#	COMMAND sh ./proto/proto_2_cpp.sh
-#	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} #COMMAND 执行目录
-#	COMMENT "========build proto to cpp========"
-#)
-#add_custom_target(TargetPB ALL DEPENDS ${PROTO_CPP_FILES})_target(TargetPB ALL DEPENDS ${PROTO_CPP_FILES})
+add_custom_target(TargetPB ALL DEPENDS ${PROTO_CPP_FILES})
+##################################################
