@@ -13,35 +13,30 @@ WorkSpaceInit  "game_svr_demo"
 Project "game_svr_demo"
 
 	SrcPath { 
-		"../bin/**.txt"
-		"../bin/**.sh"
+		"../bin/**.txt",
+		"../bin/**.sh",
 	}
 	files {
 	"../*.sh",
 	"../*.txt",
+	"../vs/premake5.lua",
 	}
 	
-
-Project "dbproxy_svr"
-	IncludeFile { 
+local COM_INCLUDE={ 
 		"../external/",
 		"../external/protobuf/include/",
+		"../external/cpp_cfg/com/",
 		"../proto/",
-		"./cpp_cfg/com/",
 	}
 
+Project "simulate_client"
+	IncludeFile(COM_INCLUDE)
+
 	SrcPath { 
-		"../dbproxy_svr/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
+		"../simulate_client/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
 		"../proto/**",
-		"./cpp_cfg/**",
+		"../external/cpp_cfg/com/**",
 	}
-	files {
-	"../*.txt",
-	"../*.lua",
-	}
-	
-    
-    
 
 Project "proto"
 	files {

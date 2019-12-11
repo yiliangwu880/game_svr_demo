@@ -57,15 +57,43 @@ endif( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 #SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 
-ADD_SUBDIRECTORY(dbproxy_svr)
-ADD_SUBDIRECTORY(db_driver)
-ADD_SUBDIRECTORY(test)
+ADD_SUBDIRECTORY(simulate_client)
 
-#自定义命令
-##################################
-#ADD_CUSTOM_COMMAND(
-#	 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-#     COMMENT "cp acc_svr/cfg Debug/bin/ -rf"
-#           )
+
+#自定义命令,依赖关系编译proto
 #
-##################################
+
+file(GLOB_RECURSE PROTO_FILES  ${CMAKE_SOURCE_DIR} "proto/*.proto")
+
+
+foreach(element ${PROTO_FILES})
+	message(element=${element})
+	STRING(REPLACE ".proto" ".pb.h" h_element ${element} )
+	set(tt ${tt} ${h_element})
+endforeach()
+
+
+message(tt=${tt})
+add_custom_command(
+	OUTPUT ${tt}
+	DEPENDS ${PROTO_FILES}
+	COMMAND sh ./proto/proto_2_cpp.sh
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} #COMMAND 执行目录
+	COMMENT "========build proto to cpp========"
+)
+add_custom_target(TargetPB ALL DEPENDS ${tt})
+
+
+#ok,但是*.h需要 clear前就有
+#file(GLOB_RECURSE PROTO_FILES  ${CMAKE_SOURCE_DIR} "proto/*.proto")
+#file(GLOB_RECURSE PROTO_CPP_FILES  ${CMAKE_SOURCE_DIR} "proto/*.h")
+#message(PROTO_FILES----=${PROTO_FILES})
+#message(PROTO_CPP_FILES=${PROTO_CPP_FILES})
+#add_custom_command(
+#	OUTPUT ${PROTO_CPP_FILES}
+#	DEPENDS ${PROTO_FILES}
+#	COMMAND sh ./proto/proto_2_cpp.sh
+#	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} #COMMAND 执行目录
+#	COMMENT "========build proto to cpp========"
+#)
+#add_custom_target(TargetPB ALL DEPENDS ${PROTO_CPP_FILES})_target(TargetPB ALL DEPENDS ${PROTO_CPP_FILES})
