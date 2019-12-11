@@ -18,6 +18,7 @@ INCLUDE_DIRECTORIES(system ./external/mysql_connector/include/)
 INCLUDE_DIRECTORIES(after  ${PROJECT_SOURCE_DIR})
 INCLUDE_DIRECTORIES(after  ./external)
 INCLUDE_DIRECTORIES(after  ./proto/)
+INCLUDE_DIRECTORIES(after  ./com/)
 
 #运行cmake输出终端消息，调试可以用
 message(PROJECT_SOURCE_DIR_is: ${PROJECT_SOURCE_DIR})

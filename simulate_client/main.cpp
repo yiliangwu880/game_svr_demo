@@ -1,12 +1,26 @@
 
-#include <signal.h>
+#include "base_app.h"
 
 using namespace std;
 
+class MyApp : public BaseApp
+{
+private:
+	virtual bool OnStart() override;
+
+};
+
+bool MyApp::OnStart()
+{
+
+
+	return true;
+}
 
 int main(int argc, char* argv[])
 {
-
+	MyApp app;
+	app.Run(argc, argv, "simulate_client");
 	return 0;
 }
 

@@ -27,23 +27,26 @@ local COM_INCLUDE={
 		"../external/protobuf/include/",
 		"../external/cpp_cfg/com/",
 		"../proto/",
+		"../com/",
 	}
 
-Project "simulate_client"
-	IncludeFile(COM_INCLUDE)
-
-	SrcPath { 
-		"../simulate_client/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
-		"../proto/**",
-		"../external/cpp_cfg/com/**",
-	}
 
 Project "proto"
 	files {
 	"../proto/*.proto",
 	}
 
+function BuildPrj(prj_name)
+	Project(prj_name)
+		IncludeFile(COM_INCLUDE)
 
+		SrcPath { 
+			"../"..prj_name.."/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
+			"../proto_cpp/**",
+			"../external/cpp_cfg/com/**",
+			"../com/**",
+		}
+end
 
-
+BuildPrj("simulate_client")
 
