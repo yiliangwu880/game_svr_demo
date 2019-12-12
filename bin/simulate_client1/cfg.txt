@@ -1,0 +1,7 @@
+acc_ex=[ //acc 外部地址
+		{ip="127.0.0.1", port=6001}, 
+		{ip="127.0.0.1", port=6101},
+	]
+user_num=1
+user_id_seg=1	//用户id段。 公式 : user_id = user_id_seg*10000+偏移id
+online_sec=0    //在线多少秒，0表示永远在线

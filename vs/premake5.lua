@@ -35,6 +35,17 @@ Project "proto"
 	files {
 	"../proto/*.proto",
 	}
+Project "proto_cpp"
+	files {
+	"../proto_cpp/**.h",
+	"../proto_cpp/**.cc",
+	}
+
+Project "bin"
+	files {
+	"../bin/**.txt",
+	"../bin/**.sh",
+	}
 
 function BuildPrj(prj_name)
 	Project(prj_name)
@@ -49,4 +60,5 @@ function BuildPrj(prj_name)
 end
 
 BuildPrj("simulate_client")
+BuildPrj("login")
 

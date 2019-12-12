@@ -14,11 +14,11 @@ INCLUDE(cotire)
 # include directories
 INCLUDE_DIRECTORIES(system ./include/)
 INCLUDE_DIRECTORIES(system ./external/protobuf/include/)
-INCLUDE_DIRECTORIES(system ./external/mysql_connector/include/)
 INCLUDE_DIRECTORIES(after  ${PROJECT_SOURCE_DIR})
 INCLUDE_DIRECTORIES(after  ./external)
-INCLUDE_DIRECTORIES(after  ./proto/)
+INCLUDE_DIRECTORIES(after  ./proto_cpp/)
 INCLUDE_DIRECTORIES(after  ./com/)
+INCLUDE_DIRECTORIES(after  ./external/cpp_cfg/com/)
 
 #运行cmake输出终端消息，调试可以用
 message(PROJECT_SOURCE_DIR_is: ${PROJECT_SOURCE_DIR})
@@ -34,6 +34,9 @@ LINK_DIRECTORIES(
   ${PROJECT_SOURCE_DIR}/external/mysql_connector/lib
   ${PROJECT_SOURCE_DIR}/external/svr_util/lib
   ${PROJECT_SOURCE_DIR}/external/libevent_cpp/lib
+  ${PROJECT_SOURCE_DIR}/external/access_svr/acc_driver/lib
+  ${PROJECT_SOURCE_DIR}/external/access_svr/acc_proto/lib
+  #${PROJECT_SOURCE_DIR}/external/access_svr/external/libevent_cpp/lib
 
   #系统目录
   /usr/local/lib
@@ -51,15 +54,7 @@ else( CMAKE_BUILD_TYPE STREQUAL "Release" )
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -lrt -O2 -DGMPERMISSION -pthread -Werror -Wno-unused-result -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
 endif( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 
-#set(CMAKE_C_COMPILER /usr/bin/gcc)
-#set(CMAKE_CXX_COMPILER /usr/bin/g++)
-#SET(CMAKE_CPP_FLAGS_DEBUG "-g -Wall -std=c++11 -Wno-format") 
-
 SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-#SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
-
-ADD_SUBDIRECTORY(simulate_client)
-
 
 #自定义命令,根据依赖关系导出proto cpp文件
 ##################################################
@@ -83,3 +78,7 @@ add_custom_command(
 )
 add_custom_target(TargetPB ALL DEPENDS ${PROTO_CPP_FILES})
 ##################################################
+
+
+ADD_SUBDIRECTORY(simulate_client)
+ADD_SUBDIRECTORY(login)

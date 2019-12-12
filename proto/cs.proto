@@ -8,11 +8,13 @@ syntax                        = "proto3";
 enum Cmd
 {
 	CMD_NONE          =0;
-	CMD_LOGIN          =1;
+	CMD_ReqLogin      =1;
+	CMD_RspLogin      =2;
 }
 message ReqLogin
 {
-	repeated string msg_name = 1; //就是protobuf message 名
+	uint64 user_uin = 1;
+	bool is_verify_ok = 2;
 }
 message RspLogin
 {

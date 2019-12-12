@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class MyApp : public BaseApp
+class MyApp : public BaseApp, public Singleton<MyApp>
 {
 private:
 	virtual bool OnStart() override;
@@ -19,8 +19,7 @@ bool MyApp::OnStart()
 
 int main(int argc, char* argv[])
 {
-	MyApp app;
-	app.Run(argc, argv, "simulate_client");
+	MyApp::Obj().Run(argc, argv, "simulate_client");
 	return 0;
 }
 
