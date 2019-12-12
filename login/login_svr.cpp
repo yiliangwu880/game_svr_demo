@@ -11,7 +11,7 @@ bool MyApp::OnStart()
 	L_COND_F(m_cfg.LoadFile("cfg.txt"));
 	if (m_cfg.is_daemon)
 	{
-		SetDaemon();
+
 	}
 	vector<acc::Addr> vec_addr;
 	for (const cfg::S_acc_inner &v: m_cfg.acc_inner)

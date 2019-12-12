@@ -15,10 +15,11 @@ INCLUDE_DIRECTORIES(after  ./cpp_cfg/com/)
 file(GLOB_RECURSE SRCS  ${PROJECT_SOURCE_DIR} "../proto_cpp/*.cc")
 file(GLOB_RECURSE SRCS2  ${PROJECT_SOURCE_DIR} "*.cpp")
 file(GLOB_RECURSE SRCS3  ${PROJECT_SOURCE_DIR} "../com/*.cpp")
+file(GLOB_RECURSE SRCS4  ${PROJECT_SOURCE_DIR} "../external/cpp_cfg/com/*.cpp")
 
 # 指定生成目标
-ADD_EXECUTABLE(${project_name} ${SRCS} ${SRCS2} ${SRCS3})
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${project_name}/)
+ADD_EXECUTABLE(${project_name} ${SRCS} ${SRCS2} ${SRCS3} ${SRCS4})
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/)
 #设置依赖
 #ADD_DEPENDENCIES(${project_name} svr_util libevent_cpp)
 

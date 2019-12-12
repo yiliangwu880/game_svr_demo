@@ -20,6 +20,9 @@ Project "game_svr_demo"
 	"../*.sh",
 	"../*.txt",
 	"../vs/premake5.lua",
+	"../bin/**.txt",
+	"../bin/**.sh",
+	"../tool/**.sh",
 	}
 	
 local COM_INCLUDE={ 
@@ -41,11 +44,6 @@ Project "proto_cpp"
 	"../proto_cpp/**.cc",
 	}
 
-Project "bin"
-	files {
-	"../bin/**.txt",
-	"../bin/**.sh",
-	}
 
 function BuildPrj(prj_name)
 	Project(prj_name)

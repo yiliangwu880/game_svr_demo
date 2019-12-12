@@ -8,7 +8,7 @@
 
 struct cfg
 {
-	struct S_acc_inner
+	struct S_acc_ex
 	{
 		std::string ip;
 		uint16_t port;
@@ -16,9 +16,12 @@ struct cfg
 
 
 	////////////////////////define member list////////////////////////
-	std::array<S_acc_inner,2> acc_inner;
+	S_acc_ex acc_ex;
+	uint16_t fowrad_echo_sec;
 	bool is_daemon;
-	int16_t svr_id;
+	uint16_t online_sec;
+	uint16_t user_num;
+	uint16_t user_uin_seg;
 
 	////////////////////////method list////////////////////////
 	//load or reload cfg file .
@@ -49,12 +52,13 @@ private:
 		try
 		{
 
-			acc_inner[0].ip = js["acc_inner"][0]["ip"];
-			acc_inner[0].port = js["acc_inner"][0]["port"];
-			acc_inner[1].ip = js["acc_inner"][1]["ip"];
-			acc_inner[1].port = js["acc_inner"][1]["port"];
+			acc_ex.ip = js["acc_ex"]["ip"];
+			acc_ex.port = js["acc_ex"]["port"];
+			fowrad_echo_sec = js["fowrad_echo_sec"];
 			is_daemon = js["is_daemon"];
-			svr_id = js["svr_id"];
+			online_sec = js["online_sec"];
+			user_num = js["user_num"];
+			user_uin_seg = js["user_uin_seg"];
 
 
 			return true;

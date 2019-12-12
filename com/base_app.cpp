@@ -16,16 +16,26 @@ public:
 	}
 };
 
-void BaseApp::Run(int argc, char* argv[], const string &app_name)
+void BaseApp::Run(int argc, char* argv[], const string &app_name, bool is_daemon)
 {
-
+	if (is_daemon)
+	{
+		//当nochdir为0时，daemon将更改进城的根目录为root(“ / ”)。
+	    //当noclose为0是，daemon将进城的STDIN, STDOUT, STDERR都重定向到 / dev / null。
+		if (0 != daemon(1, 0))
+		{
+			printf("daemon fail\n");
+			return;
+		}
+	}
 	SuMgr::Obj().Init();
 
 	//start or stop proccess
-	SPMgr::Obj().Check(argc, argv, app_name.c_str(), BaseApp::OnExitProccess);
+	SingleProgress::Obj().Check(argc, argv, app_name.c_str());
+
 
 	EventMgr::Obj().Init(&MyLcLog::Obj());
-
+	m_tm_loop.StartTimer(1000, std::bind(BaseApp::OnOneSec), true);
 	if (!OnStart())
 	{
 		L_INFO("start fail");
@@ -37,24 +47,18 @@ void BaseApp::Run(int argc, char* argv[], const string &app_name)
 }
 
 
-void BaseApp::SetDaemon()
-{
-	//当nochdir为0时，daemon将更改进城的根目录为root(“ / ”)。
-	//当noclose为0是，daemon将进城的STDIN, STDOUT, STDERR都重定向到 / dev / null。
-	if (0 != daemon(1, 0))
-	{
-		printf("daemon fail\n");
-		return;
-	}
-}
 
 void BaseApp::Exit()
 {
 	EventMgr::Obj().StopDispatch();
 }
 
-void BaseApp::OnExitProccess()
+void BaseApp::OnOneSec()
 {
-	L_INFO("OnExitProccess");
-	EventMgr::Obj().StopDispatch();
+	SuMgr::Obj().OnTimer();
+	if (SingleProgress::Obj().IsExit())
+	{
+		L_INFO("OnExitProccess");
+		EventMgr::Obj().StopDispatch();
+	}
 }

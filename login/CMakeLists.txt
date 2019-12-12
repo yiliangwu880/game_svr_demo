@@ -19,7 +19,7 @@ file(GLOB_RECURSE SRCS4  ${PROJECT_SOURCE_DIR} "../external/cpp_cfg/com/*.cpp")
 
 # 指定生成目标
 ADD_EXECUTABLE(${project_name} ${SRCS} ${SRCS2} ${SRCS3} ${SRCS4})
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${project_name}/)
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/)
 #设置依赖
 #ADD_DEPENDENCIES(acc_driver cevent_cpp)
 

@@ -1,7 +1,7 @@
-acc_ex=[ //acc �ⲿ��ַ
-		{ip="127.0.0.1", port=6001}, 
-		{ip="127.0.0.1", port=6101},
-	]
+
+is_daemon=true
+acc_ex={ip="127.0.0.1", port=6001}	//acc 外部地址
 user_num=1
-user_id_seg=1	//�û�id�Ρ� ��ʽ : user_id = user_id_seg*10000+ƫ��id
-online_sec=0    //���߶����룬0��ʾ��Զ����
+user_uin_seg=1	//用户id段。 公式 : user_id = user_id_seg*10000+偏移id
+online_sec=0    //在线多少秒，0表示永远在线
+fowrad_echo_sec=5  //定时间间隔。forward，echo 。 流程：接受 client请求，转发到别的业务服，echo	方式响			应给client.

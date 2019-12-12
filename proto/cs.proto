@@ -8,9 +8,25 @@ syntax                        = "proto3";
 enum Cmd
 {
 	CMD_NONE          =0;
-	CMD_ReqLogin      =1;
+	CMD_ReqLogin      =1; 
 	CMD_RspLogin      =2;
+
+	CMD_ReqZoneEcho      =3; 
+	CMD_RspZoneEcho      =4;
+
+
 }
+
+message ReqZoneEcho
+{
+	string string = 1;
+}
+message RspZoneEcho
+{
+	string string = 1;
+}
+
+
 message ReqLogin
 {
 	uint64 user_uin = 1;

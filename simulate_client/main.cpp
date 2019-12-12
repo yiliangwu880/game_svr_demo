@@ -1,25 +1,18 @@
 
-#include "base_app.h"
+
+#include "user.h"
 
 using namespace std;
 
-class MyApp : public BaseApp, public Singleton<MyApp>
-{
-private:
-	virtual bool OnStart() override;
-
-};
-
-bool MyApp::OnStart()
-{
-
-
-	return true;
-}
 
 int main(int argc, char* argv[])
 {
-	MyApp::Obj().Run(argc, argv, "simulate_client");
+	if (!CfgMgr<cfg>::Obj().Init("cfg.txt"))
+	{
+		printf("init cfg fail");
+		return false;
+	}
+	MyApp::Obj().Run(argc, argv, "simulate_client", G_CFG.is_daemon);
 	return 0;
 }
 
