@@ -1,6 +1,10 @@
 #include "user.h"
 
 using namespace std;
+using namespace su;
+
+#define REG_CMD_HANDLE(cmd)\
+	MAP_REG_DEFINE(CmdHandleMap, cmd, H_##cmd);
 
 const cfg &G_CFG = CfgMgr<cfg>::Obj().GetCfg();
 namespace
@@ -77,10 +81,9 @@ void ClientConnecter::Send(Cmd cmd, const google::protobuf::Message &msg)
 	SendPack(msg_pack);
 }
 
-void Disapch(SimulateUser &user, Cmd cmd, const char *msg, uint16 msg_len)
-{
 
-}
+
+
 void ClientConnecter::OnRecv(const lc::MsgPack &msg_pack)
 {
 	if (msg_pack.len < sizeof(Cmd))
@@ -93,17 +96,13 @@ void ClientConnecter::OnRecv(const lc::MsgPack &msg_pack)
 	ParseCp(cmd, cur);
 	const char *msg = cur;
 	uint16 msg_len = msg_pack.len - sizeof(Cmd);
-	switch (cmd)
+
+	HandleMsg *pHandle = MapFind(CmdHandleMap::Obj(), cmd);
+	if (nullptr == pHandle)
 	{
-		Disapch(m_user, cmd, msg, msg_len);
-	//case CMD_INIT_TABLE: Handle_CMD_INIT_TABLE(msg, msg_len); return;
-	//case CMD_INSERT: Handle_CMD_INSERT(msg, msg_len); return;
-	//case CMD_UPDATE: Handle_CMD_UPDATE(msg, msg_len); return;
-	//case CMD_GET: Handle_CMD_GET(msg, msg_len); return;
-	//case CMD_DEL: Handle_CMD_DEL(msg, msg_len); return;
-	//case CMD_SQL: Handle_CMD_SQL(msg, msg_len); return;
-	default:
-		L_WARN("illegal msg. cmd=%d", cmd); return;
-		break;
+		L_ERROR("find handle fail. cmd=%s", Cmd_Name(cmd).c_str());
+		return;
 	}
+	m_user.m_cur_cmd = cmd;
+	(*pHandle)(m_user, msg, msg_len);
 }

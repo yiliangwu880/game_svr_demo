@@ -4,6 +4,15 @@
 #include "libevent_cpp/include/include_all.h"
 #include "CC_cfg.h"
 #include "cs.pb.h"
+#include "svr_util/include/static_trick/static_reg.h"
+
+
+class SimulateUser;
+using HandleMsg = void (*)(SimulateUser &user, const char *msg, uint16 msg_len);
+
+REG_MAP_NAME_DECLARE(CmdHandleMap, Cmd, HandleMsg)
+
+
 
 class MyApp : public BaseApp, public Singleton<MyApp>
 {
@@ -12,7 +21,6 @@ private:
 
 };
 
-class SimulateUser;
 
 class ClientConnecter : public lc::ClientCon
 {
@@ -60,6 +68,7 @@ class SimulateUser
 	//统计平均响应时间
 	ReplyTimeInfo m_ze_rti; //zone echo reply time info
 	ReplyTimeInfo m_fe_rti; //forward echo reply time info
+	Cmd m_cur_cmd=CMD_NONE;
 
 public:
 	ClientConnecter m_con;
