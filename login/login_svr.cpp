@@ -47,6 +47,10 @@ void AccDriver::OnRevVerifyReq(const SessionId &id, uint32 cmd, const char *msg,
 	string rsp_str;
 	rsp.SerializeToString(&rsp_str);
 	ReqVerifyRet(id, req.is_verify_ok(), CMD_RspLogin, rsp_str.c_str(), rsp_str.length());
+	if (!req.is_verify_ok())
+	{
+		return;
+	}
 
 	bool r = MyApp::Obj().m_user_id_set.insert(req.user_uin()).second;
 	if (!r)
@@ -54,16 +58,6 @@ void AccDriver::OnRevVerifyReq(const SessionId &id, uint32 cmd, const char *msg,
 		L_ERROR("repeated login user. uin=%lld", req.user_uin());
 	}
 
-	if (req.is_verify_ok())
-	{//notify statictis login ok
-		ss::NtfLogin ntf;
-		ntf.set_uin(req.user_uin());
-		ntf.set_is_verify(req.is_verify_ok());
-		ntf.set_cid(id.cid);
-		ntf.set_acc_id(id.acc_id);
-
-		MfDriver::Obj().Send(ss::ID_STATISTIC, CMD_NtfLogin, ntf);
-	}
 }
 
 void AccDriver::OnClientDisCon(const Session &session)
@@ -74,6 +68,6 @@ void AccDriver::OnClientDisCon(const Session &session)
 	}
 	else
 	{
-		L_ERROR("discon a un login client.");
+		L_ERROR("discon a un login client.  uin=0");
 	}
 }

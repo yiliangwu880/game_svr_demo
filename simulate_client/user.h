@@ -5,6 +5,7 @@
 #include "CC_cfg.h"
 #include "cs.pb.h"
 #include "svr_util/include/static_trick/static_reg.h"
+#include "svr_util/include/string_tool.h"
 
 
 class SimulateUser;
@@ -12,7 +13,7 @@ using HandleMsg = void (*)(SimulateUser &user, const char *msg, uint16 msg_len);
 
 REG_MAP_NAME_DECLARE(CmdHandleMap, Cmd, HandleMsg)
 
-
+extern const cfg &G_CFG;
 
 class MyApp : public BaseApp, public Singleton<MyApp>
 {
@@ -45,8 +46,8 @@ private:
 //统计平均响应时间
 struct ReplyTimeInfo
 {
-	uint32 total_wait_ms;//等待总时 ms
-	uint32 total_cnt; //次数
+	uint32 total_wait_us = 0;//等待总时 us,微秒
+	uint32 total_cnt=0; //次数
 
 };
 class SimulateUser 
@@ -61,12 +62,8 @@ class SimulateUser
 
 	uint64 m_uin=0;
 	State m_state= S_WAIT_LOGIN;
-	//统计平均响应时间
-	ReplyTimeInfo m_ze_rti; //zone echo reply time info
-	ReplyTimeInfo m_fe_rti; //forward echo reply time info
 	Cmd m_cur_cmd=CMD_NONE;
 
-	su::Timer m_sec_tm; //秒定时器
 	uint32 m_zone_echo_cnt_ps = 0; //每秒echo请求次数
 
 	uint32 m_team_echo_cnt_ps = 0; //每秒echo请求次数
@@ -80,20 +77,28 @@ public:
 	uint64 GetUin() { return m_uin; }
 	void ReqZoneEchoFun();
 	void ReqTeamEchoFun();
+	uint64 CurTmUs(); //当前微秒 时间
 
-	static void CMD_NtfLoginZone(SimulateUser &user, const char *msg, uint16 msg_len);
+	static void CMD_RspLogin(SimulateUser &user, const char *msg, uint16 msg_len);
 	static void CMD_RspZoneEcho(SimulateUser &user, const char *msg, uint16 msg_len);
 	static void CMD_RspTeamEcho(SimulateUser &user, const char *msg, uint16 msg_len);
+	static void CMD_RspLoginZone(SimulateUser &user, const char *msg, uint16 msg_len);
 
-private:
 	void  OnSec();
+private:
 };
 
 class UserMgr : public Singleton<UserMgr>
 {
 	std::map<uint64, SimulateUser*> m_uin_2_user;
 	su::Timer m_sec_tm;
-	cfg m_cfg;
+	su::Timer m_10sec_tm;
+
+public:
+	//统计平均响应时间
+	ReplyTimeInfo m_ze_rti; //zone echo reply time info
+	ReplyTimeInfo m_te_rti; //team echo reply time info
+
 public:
 	~UserMgr();
 	bool Init();
@@ -101,6 +106,7 @@ public:
 private:
 	//每秒跑一次
 	void OnSecLoop();
+	void On10SecLoop();
 };
 
 extern const cfg &G_CFG;

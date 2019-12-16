@@ -45,3 +45,4 @@ private:
 	Cfg m_cfg;
 };
 
+const static uint16 ID_STATISTIC = 0x201;

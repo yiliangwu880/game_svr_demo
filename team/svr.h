@@ -9,6 +9,8 @@
 
 using namespace std;
 
+using HandleMsg = void(*)(const acc::Session &session, uint32 cmd, const char *msg, uint16 msg_len);
+REG_MAP_NAME_DECLARE(HandleMsgMap, uint32, HandleMsg)
 
 class AccDriver : public acc::ADFacadeMgr, public Singleton<AccDriver>
 {
@@ -32,12 +34,18 @@ private:
 
 class MyApp : public BaseApp, public Singleton<MyApp>
 {
+	su::Timer m_tm_10sec;
+	uint32 m_req_cnt; //处理请求次数
+	uint64 m_echo_total_bytes;//响应回显总字节数
+
 public:
 
-
+	void StatisticEcho(uint64 msg_len);
 
 private:
 	virtual bool OnStart() override;
+
+	void On10Sec();
 
 };
 

@@ -12,27 +12,40 @@ enum Cmd
 	CMD_ReqLogin      =1; 
 	CMD_RspLogin      =2;
 
-	//zone
-	CMD_ReqZoneEcho      =3; 
-	CMD_RspZoneEcho      =4;
+	//zone, zone1 id 0x101作为main cmd
+	CMD_ReqZoneEcho      =0x1010003; 
+	CMD_RspZoneEcho      =0x1010004;
 
 	//team
-	CMD_ReqTeamEcho      =0x30003; 
-	CMD_RspTeamEcho      =0x30004;
+	CMD_ReqTeamEcho      =0x3010003; 
+	CMD_RspTeamEcho      =0x3010004;
 
 	//static
-	CMD_NtfLoginZone     =0x20005; //登录zone成功，分配zone
+	CMD_ReqLoginZone      =0x2010001; 
+	CMD_RspLoginZone      =0x2010002;//登录zone成功，分配zone
 
 
+
+}
+
+message ReqLoginZone
+{
+	uint64 uin = 1;
+}
+message RspLoginZone
+{
+	uint64 uin = 1;
 }
 
 message ReqTeamEcho
 {
 	string string = 1;
+	uint64 tm_us = 2; // 微秒, 10的负6次方秒。  发送时刻时间，也所为消息唯一id
 }
 message RspTeamEcho
 {
 	string string = 1;
+	uint64 tm_us = 2; // 微秒, 10的负6次方秒。  发送时刻时间，也所为消息唯一id
 }
 
 message NtfLoginZone
@@ -43,10 +56,12 @@ message NtfLoginZone
 message ReqZoneEcho
 {
 	string string = 1;
+	uint64 tm_us = 2; // 微秒, 10的负6次方秒。  发送时刻时间，也所为消息唯一id
 }
 message RspZoneEcho
 {
 	string string = 1;
+	uint64 tm_us = 2; // 微秒, 10的负6次方秒。  发送时刻时间，也所为消息唯一id
 }
 
 

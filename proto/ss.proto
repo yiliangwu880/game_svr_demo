@@ -5,30 +5,39 @@ package ss;
 //服务器类型
 enum SvrType
 {
-	ID_ZONE      = 0x0;
-	ID_LOGIN     = 0x1;
-	ID_STATISTIC = 0x2;
-	ID_TEAM      = 0x3;
+	ST_NONE      = 0;
+	ST_ZONE      = 0x1;
+	ST_LOGIN     = 0x11;
+	ST_STATISTIC = 0x2;
+	ST_TEAM      = 0x3;
 
 }
 //消息号
 enum Cmd
 {
 	CMD_NONE			= 0;
-	CMD_NtfLogin		= 1; //ntf client login.			login 2 statistic
 	CMD_RegZone			= 2; // zone 2 statistics
+
+	CMD_NtfZoneStatistics			= 3; // 通知统计信息 zone 2 statistics
+	CMD_NtfTeamStatistics			= 4; // 通知统计信息 team 2 statistics
 }
 
+message NtfZoneStatistics
+{
+	uint32 zone_id          = 11;
+	uint32 req_cnt          = 1; //处理请求次数
+	uint64 echo_total_bytes = 2;//响应回显总字节数
+	uint32 use_sec          = 3; //使用时间秒
+}
 
+message NtfTeamStatistics
+{
+	uint32 req_cnt          = 1; //处理请求次数
+	uint64 echo_total_bytes = 2;//响应回显总字节数
+	uint32 use_sec          = 3; //使用时间秒
+}
 message RegZone
 {
 	uint32 zone_id = 1;
 }
 
-message NtfLogin
-{
-	uint64 uin = 1;
-	bool is_verify = 2;
-	uint64 cid = 3;		//acc的connect id
-	uint32 acc_id =4; 
-}

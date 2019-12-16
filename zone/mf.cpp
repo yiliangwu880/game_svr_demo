@@ -36,9 +36,19 @@ void MfDriver::Send(uint32 svr_id, ss::Cmd cmd, const google::protobuf::Message 
 	MfClientMgr::Send(svr_id, msg_pack.c_str(), msg_pack.length());
 }
 
+void MfDriver::On10Sec()
+{
+	if (!m_statistics_ready)
+	{
+		L_INFO("try con ID_STATISTIC");
+		ConUser(ID_STATISTIC);
+	}
+}
+
 void MfDriver::OnCon()
 {
 	L_INFO("reg mf ok.  svr_id=%x", G_CFG.svr_id);
+	ConUser(ID_STATISTIC);
 }
 
 void MfDriver::OnDiscon()
@@ -48,12 +58,23 @@ void MfDriver::OnDiscon()
 
 void MfDriver::OnUserCon(uint32 dst_id)
 {
-
+	if (ID_STATISTIC == dst_id)
+	{
+		L_INFO("con ID_STATISTIC ok");
+		m_statistics_ready = true;
+		RegZone req;
+		req.set_zone_id(G_CFG.svr_id);
+		Send(ID_STATISTIC, CMD_RegZone, req);
+	}
 }
 
 void MfDriver::OnUserDiscon(uint32 dst_id)
 {
-
+	if (ID_STATISTIC == dst_id)
+	{
+		L_ERROR("ID_STATISTIC discon");
+		m_statistics_ready = false;
+	}
 }
 
 void MfDriver::OnRecv(uint32 src_id, const char *custom_pack, uint16 custom_pack_len)
@@ -78,13 +99,6 @@ void MfDriver::OnRecv(uint32 src_id, const char *custom_pack, uint16 custom_pack
 	(*pHandle)(src_id, msg, msg_len);
 }
 
-void HCMD_NtfLogin(uint32 svr_id, const char *msg, uint16 msg_len)
-{
-	NtfLogin ntf;
-	L_COND(ntf.ParseFromArray(msg, msg_len));
-
-}
-MAP_REG_DEFINE(MFHandleMsgMap, CMD_NtfLogin, HCMD_NtfLogin);
 
 void HCMD_RegZone(uint32 svr_id, const char *msg, uint16 msg_len)
 {

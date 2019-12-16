@@ -78,13 +78,7 @@ void MfDriver::OnRecv(uint32 src_id, const char *custom_pack, uint16 custom_pack
 	(*pHandle)(src_id, msg, msg_len);
 }
 
-void HCMD_NtfLogin(uint32 svr_id, const char *msg, uint16 msg_len)
-{
-	NtfLogin ntf;
-	L_COND(ntf.ParseFromArray(msg, msg_len));
 
-}
-MAP_REG_DEFINE(MFHandleMsgMap, CMD_NtfLogin, HCMD_NtfLogin);
 
 void HCMD_RegZone(uint32 svr_id, const char *msg, uint16 msg_len)
 {

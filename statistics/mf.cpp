@@ -59,6 +59,7 @@ void MfDriver::OnUserDiscon(uint32 dst_id)
 
 void MfDriver::OnRecv(uint32 src_id, const char *custom_pack, uint16 custom_pack_len)
 {
+	L_DEBUG("MfDriver::OnRecv, src_id=%x, custom_pack_len=%d", src_id, custom_pack_len);
 	if (custom_pack_len < sizeof(ss::Cmd))
 	{
 		L_WARN("illegal msg. msg.len=%d", custom_pack_len);
@@ -79,35 +80,30 @@ void MfDriver::OnRecv(uint32 src_id, const char *custom_pack, uint16 custom_pack
 	(*pHandle)(src_id, msg, msg_len);
 }
 
-void HCMD_NtfLogin(uint32 svr_id, const char *msg, uint16 msg_len)
-{
-	NtfLogin ntf;
-	L_COND(ntf.ParseFromArray(msg, msg_len));
-	uint16 zone_id = MyApp::Obj().GetLeastUserZone();
-	L_COND(0 != zone_id);
-	L_COND(ntf.uin());
-	SessionId id;
-	id.acc_id = ntf.acc_id();
-	id.cid = ntf.cid();
-	//login zone, route zone msg
-	{
-		MyApp::Obj().AddLoginUser(ntf.uin(), zone_id);
-		AccDriver::Obj().BroadcastUinToSession(id, ntf.uin());
-		AccDriver::Obj().SetMainCmd2Svr(id, ss::ID_ZONE, zone_id);
-	}
-	//sent to client
-	{
-		NtfLoginZone ntfZone;
-		ntfZone.set_uin(ntf.uin());
-		AccDriver::Obj().SendToClient(id, CMD_NtfLoginZone, ntfZone);
-	}
-}
-MAP_REG_DEFINE(MFHandleMsgMap, CMD_NtfLogin, HCMD_NtfLogin);
+
 
 void HCMD_RegZone(uint32 svr_id, const char *msg, uint16 msg_len)
 {
 	RegZone ntf;
 	L_COND(ntf.ParseFromArray(msg, msg_len));
-
+	MyApp::Obj().AddZone(ntf.zone_id());
 }
 MAP_REG_DEFINE(MFHandleMsgMap, CMD_RegZone, HCMD_RegZone);
+
+void HCMD_NtfTeamStatistics(uint32 svr_id, const char *msg, uint16 msg_len)
+{
+	NtfTeamStatistics ntf;
+	L_COND(ntf.ParseFromArray(msg, msg_len));
+	MyApp::Obj().NtfStatistics(ntf);
+
+}
+MAP_REG_DEFINE(MFHandleMsgMap, CMD_NtfTeamStatistics, HCMD_NtfTeamStatistics);
+
+void HCMD_NtfZoneStatistics(uint32 svr_id, const char *msg, uint16 msg_len)
+{
+	NtfZoneStatistics ntf;
+	L_COND(ntf.ParseFromArray(msg, msg_len));
+	MyApp::Obj().NtfStatistics(ntf);
+
+}
+MAP_REG_DEFINE(MFHandleMsgMap, CMD_NtfZoneStatistics, HCMD_NtfZoneStatistics);

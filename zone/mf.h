@@ -16,10 +16,12 @@ extern const cfg &G_CFG;
 
 class MfDriver : public mf::MfClientMgr, public Singleton<MfDriver>
 {
+	bool m_statistics_ready = false; //true 表示。 依赖的 statistics准备好
 public:
 	bool Init();
 
 	void Send(uint32 svr_id, ss::Cmd cmd, const google::protobuf::Message &msg);
+	void On10Sec();
 private:
 	//反馈连接mf svr list 情况。连接任意第一台都算成功。
 	//连接已成功的情况，再连接第N台，不会回调。

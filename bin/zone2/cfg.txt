@@ -1,11 +1,10 @@
-a1=999999999999999333
-a2="tt33"
-a22=[1,2]
-a3={b1=2, b2:{
-			c1=true, 
-			c2:['a','b']
-			}
-	}
-a31=[{b1=false},{b1=true}]
-dynamic dyn1 = 1
-dynamic dyn2 = { a="a",b=2,  b1 = [1,2] }
+acc_inner=[
+	{ip="127.0.0.1", port=6000}, 
+	{ip="127.0.0.1", port=6100},
+]
+mf_svr=[
+	{ip="127.0.0.1", port=50001}, 
+	{ip="127.0.0.1", port=50002},
+]
+svr_id=0x102   //SvrType<<8 + id, SvrType 必须和 ss.proto定义一致
+is_daemon = true //true表示后台运行

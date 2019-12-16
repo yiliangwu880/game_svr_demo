@@ -27,32 +27,49 @@ UserMgr::~UserMgr()
 bool UserMgr::Init()
 {
 
-	L_INFO("init UserMgr, user num=%d", m_cfg.user_num);
-	L_COND_F(m_cfg.user_num >= 1);
+	L_INFO("init UserMgr, user num=%d", G_CFG.user_num);
+	L_COND_F(G_CFG.user_num >= 1);
 
-	for (uint32 i=0; i< m_cfg.user_num; ++i)
+	for (uint32 i=0; i< G_CFG.user_num; ++i)
 	{//create all user
-		uint64 uin = m_cfg.user_uin_seg + i;
+		uint64 uin = G_CFG.user_uin_seg + i;
 		SimulateUser *p = new SimulateUser(uin);
 		m_uin_2_user[uin] = p;
 	}
 
 	m_sec_tm.StartTimer(1, std::bind(&UserMgr::OnSecLoop, this), true);
+	m_10sec_tm.StartTimer(10, std::bind(&UserMgr::On10SecLoop, this), true);
 	return true;
 }
 
 void UserMgr::OnSecLoop()
 {
+	for (auto &v : m_uin_2_user)
+	{
+		v.second->OnSec();
+	}
 
 }
 
+void UserMgr::On10SecLoop()
+{
+	if (0 != m_ze_rti.total_cnt)
+	{
+		L_INFO("====zone echo rsp avarage interval.  %lld ms====", (m_ze_rti.total_wait_us / 1000) / m_ze_rti.total_cnt);
+	}
+	if (0 != m_te_rti.total_cnt)
+	{
+		L_INFO("====team echo rsp avarage interval.  %lld ms====", (m_te_rti.total_wait_us / 1000) / m_te_rti.total_cnt);
+	}
+}
+
 SimulateUser::SimulateUser(uint64 uin)
-	:m_con(*this)
+	:m_uin(uin)
+	,m_con(*this)
 {
 	bool r = m_con.ConnectInit(G_CFG.acc_ex.ip.c_str(), G_CFG.acc_ex.port);
 	L_COND(r);
 
-	m_sec_tm.StartTimer(1, std::bind(&SimulateUser::OnSec, this), true);
 }
 
 void SimulateUser::Send(Cmd cmd, const google::protobuf::Message &msg)
@@ -73,6 +90,7 @@ void SimulateUser::ReqZoneEchoFun()
 
 	ReqZoneEcho req;
 	req.set_string(G_CFG.zone.echo_str);
+	req.set_tm_us(CurTmUs());
 	Send(CMD_ReqZoneEcho, req);
 }
 
@@ -87,9 +105,18 @@ void SimulateUser::ReqTeamEchoFun()
 
 	ReqTeamEcho req;
 	req.set_string(G_CFG.team.echo_str);
+	req.set_tm_us(CurTmUs());
 	Send(CMD_ReqTeamEcho, req);
 }
 
+
+uint64 SimulateUser::CurTmUs()
+{
+	struct  timeval start;
+	gettimeofday(&start, NULL);
+
+	return 1000000 * (start.tv_sec) + start.tv_usec;
+}
 
 void SimulateUser::OnSec()
 {
@@ -141,8 +168,9 @@ void ClientConnecter::OnRecv(const lc::MsgPack &msg_pack)
 
 void ClientConnecter::OnConnected()
 {
-	L_DEBUG("OnConnected");
+	L_DEBUG("OnConnected uin=%lld", m_user.m_uin);
 	ReqLogin req;
 	req.set_user_uin(m_user.m_uin);
 	req.set_is_verify_ok(true);
+	Send(CMD_ReqLogin, req);
 }

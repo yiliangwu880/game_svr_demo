@@ -9,27 +9,19 @@ using namespace su;
 #define REG_MEMBER_HANDLE(cmd)\
 	MAP_REG_DEFINE(CmdHandleMap, cmd, SimulateUser::cmd);
 
-void H_CMD_RspLogin(SimulateUser &user, const char *msg, uint16 msg_len)
+void SimulateUser::CMD_RspLogin(SimulateUser &user, const char *msg, uint16 msg_len)
 {
 	RspLogin rsp;
 	L_COND(rsp.ParseFromArray(msg, msg_len));
 	L_COND(rsp.is_ok());
-	L_INFO("login ok. uin=%lld", user.GetUin());
+	L_INFO("login ok. ReqLoginZone, uin=%lld", user.GetUin());
+
+	ReqLoginZone req;
+	req.set_uin(user.GetUin());
+	user.m_con.Send(CMD_ReqLoginZone, req);
 }
-REG_CMD_HANDLE(CMD_RspLogin); 
 
 
-void SimulateUser::CMD_NtfLoginZone(SimulateUser &user, const char *msg, uint16 msg_len)
-{
-	NtfLoginZone rsp;
-	L_COND(rsp.ParseFromArray(msg, msg_len));
-	L_COND(rsp.uin() == user.GetUin());
-	L_INFO("login zone ok. uin=%lld", user.GetUin());
-	L_COND(user.m_state == S_WAIT_LOGIN);
-	user.m_state = S_WAIT_ECHO;
-
-}
-REG_MEMBER_HANDLE(CMD_NtfLoginZone); 
 
 void SimulateUser::CMD_RspZoneEcho(SimulateUser &user, const char *msg, uint16 msg_len)
 {
@@ -40,9 +32,17 @@ void SimulateUser::CMD_RspZoneEcho(SimulateUser &user, const char *msg, uint16 m
 	L_COND(user.m_state == S_WAIT_ECHO);
 	L_INFO("rev zone echo. uin=%lld", user.GetUin());
 
+	L_COND(user.CurTmUs() > rsp.tm_us());
+	uint64 interval_us = user.CurTmUs() - rsp.tm_us();
+	if (interval_us/1000*1000> 10)//>10sec
+	{
+		L_ERROR("rsp wait too long. > 10 second");
+		return;
+	}
+	UserMgr::Obj().m_ze_rti.total_cnt++;
+	UserMgr::Obj().m_ze_rti.total_wait_us += interval_us;
 	
 }
-REG_MEMBER_HANDLE(CMD_RspZoneEcho);
 
 void SimulateUser::CMD_RspTeamEcho(SimulateUser &user, const char *msg, uint16 msg_len)
 {
@@ -51,5 +51,31 @@ void SimulateUser::CMD_RspTeamEcho(SimulateUser &user, const char *msg, uint16 m
 	L_COND(rsp.string().length() == G_CFG.team.echo_str.length());
 	L_COND(user.m_state == S_WAIT_ECHO);
 	L_INFO("rev team echo. uin=%lld", user.GetUin());
+
+	L_COND(user.CurTmUs() > rsp.tm_us());
+	uint64 interval_us = user.CurTmUs() - rsp.tm_us();
+	if (interval_us / 1000 * 1000 > 10)//>10sec
+	{
+		L_ERROR("rsp wait too long. > 10 second");
+		return;
+	}
+	UserMgr::Obj().m_te_rti.total_cnt++;
+	UserMgr::Obj().m_te_rti.total_wait_us += interval_us;
 }
+
+
+void SimulateUser::CMD_RspLoginZone(SimulateUser &user, const char *msg, uint16 msg_len)
+{
+//	L_DEBUG("msg=%s, len=%d", StringTool::BinaryToHex(string(msg, msg_len)).c_str(), msg_len);
+	RspLoginZone rsp;
+	L_COND(rsp.ParseFromArray(msg, msg_len));
+
+	L_INFO("login zone ok. uin=%lld", user.GetUin());
+	L_COND(user.m_state == S_WAIT_LOGIN);
+	user.m_state = S_WAIT_ECHO;
+
+}
+REG_MEMBER_HANDLE(CMD_RspLogin);
+REG_MEMBER_HANDLE(CMD_RspZoneEcho);
 REG_MEMBER_HANDLE(CMD_RspTeamEcho);
+REG_MEMBER_HANDLE(CMD_RspLoginZone);

@@ -35,6 +35,7 @@ void BaseApp::Run(int argc, char* argv[], const string &app_name, bool is_daemon
 
 
 	EventMgr::Obj().Init(&MyLcLog::Obj());
+	L_INFO("===========start app=============");
 	m_tm_loop.StartTimer(1000, std::bind(BaseApp::OnOneSec), true);
 	if (!OnStart())
 	{
@@ -43,7 +44,7 @@ void BaseApp::Run(int argc, char* argv[], const string &app_name, bool is_daemon
 	}
 
 	EventMgr::Obj().Dispatch();
-	L_INFO("main end");
+	L_INFO("===========app end===========");
 }
 
 
