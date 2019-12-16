@@ -4,6 +4,7 @@
 #include "msg_forward/mf_driver/include/mf_driver.h"
 #include "svr_util/include/stl_boost.h"
 #include "svr_util/include/static_trick/static_reg.h"
+#include "access_svr/acc_driver/include/acc_driver.h"
 #include "CC_cfg.h"
 #include "cs.pb.h"
 #include "ss.pb.h"

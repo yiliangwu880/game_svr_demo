@@ -14,12 +14,21 @@ enum SvrType
 //消息号
 enum Cmd
 {
-	CMD_NONE          = 0;
-	CMD_NtfLogin      = 1; //ntf client login.			login 2 statistic
+	CMD_NONE			= 0;
+	CMD_NtfLogin		= 1; //ntf client login.			login 2 statistic
+	CMD_RegZone			= 2; // zone 2 statistics
+}
+
+
+message RegZone
+{
+	uint32 zone_id = 1;
 }
 
 message NtfLogin
 {
 	uint64 uin = 1;
 	bool is_verify = 2;
+	uint64 cid = 3;		//acc的connect id
+	uint32 acc_id =4; 
 }

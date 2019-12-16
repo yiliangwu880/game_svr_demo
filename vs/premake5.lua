@@ -29,7 +29,7 @@ local COM_INCLUDE={
 		"../external/",
 		"../external/protobuf/include/",
 		"../external/cpp_cfg/com/",
-		"../proto/",
+		"../proto_cpp/",
 		"../com/",
 	}
 
@@ -38,11 +38,11 @@ Project "proto"
 	files {
 	"../proto/*.proto",
 	}
-Project "proto_cpp"
-	files {
-	"../proto_cpp/**.h",
-	"../proto_cpp/**.cc",
-	}
+--Project "proto_cpp"
+--	files {
+--	"../proto_cpp/**.h",
+--	"../proto_cpp/**.cc",
+--	}
 
 
 function BuildPrj(prj_name)
@@ -51,7 +51,7 @@ function BuildPrj(prj_name)
 
 		SrcPath { 
 			"../"..prj_name.."/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
-			"../proto_cpp/**",
+			--"../proto_cpp/**",
 			"../external/cpp_cfg/com/**",
 			"../com/**",
 		}
@@ -59,4 +59,5 @@ end
 
 BuildPrj("simulate_client")
 BuildPrj("login")
+BuildPrj("statistics")
 

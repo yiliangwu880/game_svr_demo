@@ -8,6 +8,13 @@ cd ../bin/login1
 cd -
 mv ../bin/login1/*.h ../login/
 
+#statistics
+cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/statistics/
+cd ../bin/statistics
+./export_cpp_cfg cfg.txt
+cd -
+mv ../bin/statistics/*.h ../statistics/
+
 #simulate_client
 cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/simulate_client1/
 cd ../bin/simulate_client1

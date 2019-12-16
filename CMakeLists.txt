@@ -82,4 +82,4 @@ add_custom_target(TargetPB ALL DEPENDS ${PROTO_CPP_FILES})
 
 ADD_SUBDIRECTORY(simulate_client)
 ADD_SUBDIRECTORY(login)
-ADD_SUBDIRECTORY(statistic)
+ADD_SUBDIRECTORY(statistics)

@@ -1,20 +1,21 @@
 #include "mf.h"
+#include "svr.h"
 
 using namespace lc;
 using namespace std;
 using namespace mf;
 using namespace ss;
+using namespace acc;
 using namespace su;
 
 const cfg &G_CFG = CfgMgr<cfg>::Obj().GetCfg();
 
-#define REG_MEMBER_HANDLE(cmd)\
-	MAP_REG_DEFINE(MFHandleMsgMap, cmd, H##cmd);
+	
 
 bool MfDriver::Init()
 {
 	vector<MfAddr> vec;
-	for (auto &v: G_CFG.mf_svr)
+	for (auto &v : G_CFG.mf_svr)
 	{
 		vec.push_back({ v.ip, v.port });
 	}
@@ -77,3 +78,36 @@ void MfDriver::OnRecv(uint32 src_id, const char *custom_pack, uint16 custom_pack
 	}
 	(*pHandle)(src_id, msg, msg_len);
 }
+
+void HCMD_NtfLogin(uint32 svr_id, const char *msg, uint16 msg_len)
+{
+	NtfLogin ntf;
+	L_COND(ntf.ParseFromArray(msg, msg_len));
+	uint16 zone_id = MyApp::Obj().GetLeastUserZone();
+	L_COND(0 != zone_id);
+	L_COND(ntf.uin());
+	SessionId id;
+	id.acc_id = ntf.acc_id();
+	id.cid = ntf.cid();
+	//login zone, route zone msg
+	{
+		MyApp::Obj().AddLoginUser(ntf.uin(), zone_id);
+		AccDriver::Obj().BroadcastUinToSession(id, ntf.uin());
+		AccDriver::Obj().SetMainCmd2Svr(id, ss::ID_ZONE, zone_id);
+	}
+	//sent to client
+	{
+		NtfLoginZone ntfZone;
+		ntfZone.set_uin(ntf.uin());
+		AccDriver::Obj().SendToClient(id, CMD_NtfLoginZone, ntfZone);
+	}
+}
+MAP_REG_DEFINE(MFHandleMsgMap, CMD_NtfLogin, HCMD_NtfLogin);
+
+void HCMD_RegZone(uint32 svr_id, const char *msg, uint16 msg_len)
+{
+	RegZone ntf;
+	L_COND(ntf.ParseFromArray(msg, msg_len));
+
+}
+MAP_REG_DEFINE(MFHandleMsgMap, CMD_RegZone, HCMD_RegZone);

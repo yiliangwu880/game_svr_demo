@@ -3,6 +3,7 @@
 using namespace lc;
 using namespace std;
 using namespace acc;
+using namespace ss;
 
 
 bool MyApp::OnStart()
@@ -55,9 +56,13 @@ void AccDriver::OnRevVerifyReq(const SessionId &id, uint32 cmd, const char *msg,
 
 	if (req.is_verify_ok())
 	{//notify statictis login ok
-		//ss.NtfLogin ntf;
+		ss::NtfLogin ntf;
+		ntf.set_uin(req.user_uin());
+		ntf.set_is_verify(req.is_verify_ok());
+		ntf.set_cid(id.cid);
+		ntf.set_acc_id(id.acc_id);
 
-
+		MfDriver::Obj().Send(ss::ID_STATISTIC, CMD_NtfLogin, ntf);
 	}
 }
 

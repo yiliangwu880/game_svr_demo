@@ -7,16 +7,7 @@ using namespace su;
 	MAP_REG_DEFINE(CmdHandleMap, cmd, H_##cmd);
 
 const cfg &G_CFG = CfgMgr<cfg>::Obj().GetCfg();
-namespace
-{
-	//简化解包操作。赋值并移动指针
-	template<class T>
-	void ParseCp(T &dst, const char *&src)
-	{
-		dst = *(T *)(src); // 类似 dst = *(uint32 *)(src)
-		src = src + sizeof(dst);
-	}
-}
+
 bool MyApp::OnStart()
 {
 	L_COND_F(UserMgr::Obj().Init());
