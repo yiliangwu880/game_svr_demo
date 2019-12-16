@@ -60,4 +60,6 @@ end
 BuildPrj("simulate_client")
 BuildPrj("login")
 BuildPrj("statistics")
+BuildPrj("team")
+BuildPrj("zone")
 

@@ -15,6 +15,21 @@ cd ../bin/statistics
 cd -
 mv ../bin/statistics/*.h ../statistics/
 
+#team
+cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/team/
+cd ../bin/team
+./export_cpp_cfg cfg.txt
+cd -
+mv ../bin/team/*.h ../team/
+
+#zone
+cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/zone1/
+cd ../bin/zone1
+./export_cpp_cfg cfg.txt
+cd -
+mv ../bin/zone1/*.h ../zone/
+
+
 #simulate_client
 cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/simulate_client1/
 cd ../bin/simulate_client1
