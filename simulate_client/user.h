@@ -35,11 +35,7 @@ public:
 	void Send(Cmd cmd, const google::protobuf::Message &msg);
 private:
 	virtual void OnRecv(const lc::MsgPack &msg) override;
-	virtual void OnConnected() override
-	{
-		L_DEBUG("OnConnected");
-		
-	}
+	virtual void OnConnected() override;
 	virtual void OnDisconnected() override
 	{
 		L_DEBUG("OnDisconnected");
@@ -60,7 +56,7 @@ class SimulateUser
 	enum State
 	{
 		S_WAIT_LOGIN,
-		S_WAIT_ZONE_ECHO,//等zone 回显,
+		S_WAIT_ECHO,//等zone 回显,
 	};
 
 	uint64 m_uin=0;
@@ -70,14 +66,27 @@ class SimulateUser
 	ReplyTimeInfo m_fe_rti; //forward echo reply time info
 	Cmd m_cur_cmd=CMD_NONE;
 
+	su::Timer m_sec_tm; //秒定时器
+	uint32 m_zone_echo_cnt_ps = 0; //每秒echo请求次数
+
+	uint32 m_team_echo_cnt_ps = 0; //每秒echo请求次数
+
 public:
 	ClientConnecter m_con;
 
 public:
 	SimulateUser(uint64 uin);
 	void Send(Cmd cmd, const google::protobuf::Message &msg);
-private:
+	uint64 GetUin() { return m_uin; }
+	void ReqZoneEchoFun();
+	void ReqTeamEchoFun();
 
+	static void CMD_NtfLoginZone(SimulateUser &user, const char *msg, uint16 msg_len);
+	static void CMD_RspZoneEcho(SimulateUser &user, const char *msg, uint16 msg_len);
+	static void CMD_RspTeamEcho(SimulateUser &user, const char *msg, uint16 msg_len);
+
+private:
+	void  OnSec();
 };
 
 class UserMgr : public Singleton<UserMgr>

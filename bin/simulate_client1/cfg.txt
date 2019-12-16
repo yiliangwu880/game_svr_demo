@@ -5,3 +5,13 @@ user_num=1
 user_uin_seg=1	//用户id段。 公式 : user_id = user_id_seg*10000+偏移id
 online_sec=0    //在线多少秒，0表示永远在线
 fowrad_echo_sec=5  //定时间间隔。forward，echo 。 流程：接受 client请求，转发到别的业务服，echo	方式响			应给client.
+zone={
+//echo 内容
+echo_str="abcxxxxxxxxxxxxxxxxxdkxxxxxxxxxxxxxxxxxxxxxxdfdfxxxxxxxxxxxxxxxxxdffffffffffffffffff"
+max_echo_num_ps=5 //每秒最多x次请求echo
+}
+team={
+//echo 内容
+echo_str="abc"
+max_echo_num_ps=1 //每秒最多x次请求echo
+}

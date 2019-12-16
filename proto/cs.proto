@@ -1,20 +1,43 @@
 
 syntax                        = "proto3";
 //package pb; 
-
+//import "ss.proto";
 
 
 //消息号
 enum Cmd
 {
 	CMD_NONE          =0;
+	//login
 	CMD_ReqLogin      =1; 
 	CMD_RspLogin      =2;
 
+	//zone
 	CMD_ReqZoneEcho      =3; 
 	CMD_RspZoneEcho      =4;
 
+	//team
+	CMD_ReqTeamEcho      =0x30003; 
+	CMD_RspTeamEcho      =0x30004;
 
+	//static
+	CMD_NtfLoginZone     =0x20005; //登录zone成功，分配zone
+
+
+}
+
+message ReqTeamEcho
+{
+	string string = 1;
+}
+message RspTeamEcho
+{
+	string string = 1;
+}
+
+message NtfLoginZone
+{
+	uint64  uin = 1;
 }
 
 message ReqZoneEcho

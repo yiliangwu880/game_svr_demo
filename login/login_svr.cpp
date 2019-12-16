@@ -2,24 +2,21 @@
 
 using namespace lc;
 using namespace std;
-
 using namespace acc;
 
 
 bool MyApp::OnStart()
 {
-	L_COND_F(m_cfg.LoadFile("cfg.txt"));
-	if (m_cfg.is_daemon)
-	{
 
-	}
 	vector<acc::Addr> vec_addr;
-	for (const cfg::S_acc_inner &v: m_cfg.acc_inner)
+	for (const cfg::S_acc_inner &v: G_CFG.acc_inner)
 	{
 		vec_addr.push_back({ v.ip, v.port });
 	}
 
-	L_COND_F(AccDriver::Obj().Init(vec_addr, m_cfg.svr_id, true));
+	L_COND_F(AccDriver::Obj().Init(vec_addr, G_CFG.svr_id, true));
+
+	L_COND_F(MfDriver::Obj().Init());
 
 	return true;
 }
@@ -32,12 +29,13 @@ void AccDriver::OnRegResult(uint16 svr_id)
 		LB_FATAL("reg acc fail, exit progress");
 		MyApp::Obj().Exit();
 	}
-	L_COND(svr_id == MyApp::Obj().GetSvrId());
+	L_COND(svr_id == G_CFG.svr_id);
 	L_INFO("reg acc ok");
 }
 
 void AccDriver::OnRevVerifyReq(const SessionId &id, uint32 cmd, const char *msg, uint16 msg_len)
 {
+	L_COND(MfDriver::Obj().IsCon(), "mf is not prepare");
 	L_INFO("handle verify");
 	L_COND(cmd == CMD_ReqLogin);
 	ReqLogin req; 
@@ -53,6 +51,13 @@ void AccDriver::OnRevVerifyReq(const SessionId &id, uint32 cmd, const char *msg,
 	if (!r)
 	{
 		L_ERROR("repeated login user. uin=%lld", req.user_uin());
+	}
+
+	if (req.is_verify_ok())
+	{//notify statictis login ok
+		//ss.NtfLogin ntf;
+
+
 	}
 }
 

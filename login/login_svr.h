@@ -4,6 +4,8 @@
 #include "svr_util/include/stl_boost.h"
 #include "CC_cfg.h"
 #include "cs.pb.h"
+#include "ss.pb.h"
+#include "mf.h"
 
 using namespace std;
 
@@ -23,16 +25,14 @@ private:
 };
 
 
+
 class MyApp : public BaseApp, public Singleton<MyApp>
 {
-	cfg m_cfg;
 
 public:
 	std::set<uint64> m_user_id_set; //验证用户集合
-	//AccDriver acc_driver;
+
 public:
-	const cfg &GetCfg() const { return m_cfg; }
-	const uint16 GetSvrId() const {return m_cfg.svr_id;}
 
 private:
 	virtual bool OnStart() override;

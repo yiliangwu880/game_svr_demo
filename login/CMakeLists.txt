@@ -24,5 +24,5 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/)
 #ADD_DEPENDENCIES(acc_driver cevent_cpp)
 
 #未明：cevent_cpp必须放后面
-target_link_libraries(${project_name} protobuf acc_driver acc_proto cevent_cpp svr_util)
+target_link_libraries(${project_name} mf_driver mf_proto protobuf acc_driver acc_proto cevent_cpp svr_util)
 

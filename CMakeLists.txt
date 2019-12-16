@@ -29,14 +29,14 @@ LINK_DIRECTORIES(
   ${CMAKE_SOURCE_DIR}/lib
 
   #项目引用第三方库
-  ${PROJECT_SOURCE_DIR}/db_driver/lib
   ${PROJECT_SOURCE_DIR}/external/protobuf/lib
-  ${PROJECT_SOURCE_DIR}/external/mysql_connector/lib
   ${PROJECT_SOURCE_DIR}/external/svr_util/lib
   ${PROJECT_SOURCE_DIR}/external/libevent_cpp/lib
   ${PROJECT_SOURCE_DIR}/external/access_svr/acc_driver/lib
   ${PROJECT_SOURCE_DIR}/external/access_svr/acc_proto/lib
-  #${PROJECT_SOURCE_DIR}/external/access_svr/external/libevent_cpp/lib
+  ${PROJECT_SOURCE_DIR}/external/msg_forward/mf_driver/lib
+  ${PROJECT_SOURCE_DIR}/external/msg_forward/mf_proto/lib
+
 
   #系统目录
   /usr/local/lib
@@ -82,3 +82,4 @@ add_custom_target(TargetPB ALL DEPENDS ${PROTO_CPP_FILES})
 
 ADD_SUBDIRECTORY(simulate_client)
 ADD_SUBDIRECTORY(login)
+ADD_SUBDIRECTORY(statistic)

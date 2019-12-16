@@ -61,11 +61,54 @@ SimulateUser::SimulateUser(uint64 uin)
 	bool r = m_con.ConnectInit(G_CFG.acc_ex.ip.c_str(), G_CFG.acc_ex.port);
 	L_COND(r);
 
+	m_sec_tm.StartTimer(1, std::bind(&SimulateUser::OnSec, this), true);
 }
 
 void SimulateUser::Send(Cmd cmd, const google::protobuf::Message &msg)
 {
 	m_con.Send(cmd, msg);
+}
+
+
+
+void SimulateUser::ReqZoneEchoFun()
+{
+	L_COND(m_state == S_WAIT_ECHO);
+	if (m_zone_echo_cnt_ps >= G_CFG.zone.max_echo_num_ps)
+	{
+		return;
+	}
+	m_zone_echo_cnt_ps++;
+
+	ReqZoneEcho req;
+	req.set_string(G_CFG.zone.echo_str);
+	Send(CMD_ReqZoneEcho, req);
+}
+
+void SimulateUser::ReqTeamEchoFun()
+{
+	L_COND(m_state == S_WAIT_ECHO);
+	if (m_team_echo_cnt_ps >= G_CFG.team.max_echo_num_ps)
+	{
+		return;
+	}
+	m_team_echo_cnt_ps++;
+
+	ReqTeamEcho req;
+	req.set_string(G_CFG.team.echo_str);
+	Send(CMD_ReqTeamEcho, req);
+}
+
+
+void SimulateUser::OnSec()
+{
+	m_zone_echo_cnt_ps = 0;
+	m_team_echo_cnt_ps = 0;
+	if (m_state == S_WAIT_ECHO)
+	{
+		ReqZoneEchoFun();
+		ReqTeamEchoFun();
+	}
 }
 
 void ClientConnecter::Send(Cmd cmd, const google::protobuf::Message &msg)
@@ -80,8 +123,6 @@ void ClientConnecter::Send(Cmd cmd, const google::protobuf::Message &msg)
 	msg_pack.append(s);
 	SendPack(msg_pack);
 }
-
-
 
 
 void ClientConnecter::OnRecv(const lc::MsgPack &msg_pack)
@@ -105,4 +146,12 @@ void ClientConnecter::OnRecv(const lc::MsgPack &msg_pack)
 	}
 	m_user.m_cur_cmd = cmd;
 	(*pHandle)(m_user, msg, msg_len);
+}
+
+void ClientConnecter::OnConnected()
+{
+	L_DEBUG("OnConnected");
+	ReqLogin req;
+	req.set_user_uin(m_user.m_uin);
+	req.set_is_verify_ok(true);
 }

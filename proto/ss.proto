@@ -1,12 +1,25 @@
 
 syntax                        = "proto3";
-//package pb; 
+package ss; 
 
-
-
-//消息号
-enum SSCmd
+//服务器类型
+enum SvrType
 {
-	SSCMD_NONE          =0;
-	SSCMD_INFO          =1;
+	ID_ZONE      = 0x0;
+	ID_LOGIN     = 0x1;
+	ID_STATISTIC = 0x2;
+	ID_TEAM      = 0x3;
+
+}
+//消息号
+enum Cmd
+{
+	CMD_NONE          = 0;
+	CMD_NtfLogin      = 1; //ntf client login.			login 2 statistic
+}
+
+message NtfLogin
+{
+	uint64 uin = 1;
+	bool is_verify = 2;
 }
