@@ -22,7 +22,62 @@ function KillOneProcess(){
 	
 }
 
+function StartServer(){
+cd acc1
+./acc_svr
+cd -
+cd acc2
+./acc_svr
+cd -
 
+cd msg_forward1
+./mf_svr
+cd -
+cd msg_forward2
+./mf_svr
+cd -
+sleep 1s 
+
+cd statistics1
+./statistics
+cd -
+
+sleep 1s 
+
+cd zone1
+./zone
+cd -
+cd zone2
+./zone
+cd -
+cd zone3
+./zone
+cd -
+
+cd team1
+./team
+cd -
+
+cd login1
+./login
+cd -
+cd login2
+./login
+cd -
+
+sleep 1s 
+}
+
+function StartClient(){
+
+cd simulate_client1
+./simulate_client
+cd -
+#cd simulate_client2
+#./simulate_client
+#cd -
+
+}
 function SimpleTest(){
 cd acc1
 ./acc_svr
@@ -57,8 +112,6 @@ sleep 1s
 cd simulate_client1
 ./simulate_client
 cd -
-
-
 }
 
 function clearLog(){
@@ -79,7 +132,8 @@ function stop(){
 #Init
 if [ $# -lt 1 ];then
 	echo "run all"
-	SimpleTest
+	StartServer
+	StartClient
 else
     echo "run submodue" $1
 	$1

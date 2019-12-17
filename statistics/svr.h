@@ -19,22 +19,22 @@ public:
 	void SendToClient(const acc::SessionId &id, ::Cmd cmd, const google::protobuf::Message &msg);
 
 private:
-	//»Øµ÷×¢²á½á¹û, Ê§°Ü¾ÍÊÇÅäÖÃ´íÎóÁË£¬ÎŞ·¨ĞŞ¸´¡£ÖØÆô½ø³Ì°É¡£
-	//@svr_id = 0±íÊ¾Ê§°Ü
+	//å›è°ƒæ³¨å†Œç»“æœ, å¤±è´¥å°±æ˜¯é…ç½®é”™è¯¯äº†ï¼Œæ— æ³•ä¿®å¤ã€‚é‡å¯è¿›ç¨‹å§ã€‚
+	//@svr_id = 0è¡¨ç¤ºå¤±è´¥
 	virtual void OnRegResult(uint16 svr_id);
 
-	//client¶ÏÏßÍ¨Öª
+	//clientæ–­çº¿é€šçŸ¥
 	virtual void OnClientDisCon(const acc::Session &session);
 
-	//½ÓÊÕclientÏûÏ¢°üµ½svr
+	//æ¥æ”¶clientæ¶ˆæ¯åŒ…åˆ°svr
 	virtual void OnRevClientMsg(const acc::Session &session, uint32 cmd, const char *msg, uint16 msg_len);
 };
 
 
 struct EchoStaticsInfo 
 {
-	uint32 m_req_cnt; //´¦ÀíÇëÇó´ÎÊı
-	uint64 m_echo_total_bytes;//ÏìÓ¦»ØÏÔ×Ü×Ö½ÚÊı
+	uint32 m_req_cnt = 0; //å¤„ç†è¯·æ±‚æ¬¡æ•°
+	uint64 m_echo_total_bytes = 0;//å“åº”å›æ˜¾æ€»å­—èŠ‚æ•°
 };
 
 class MyApp : public BaseApp, public Singleton<MyApp>
@@ -46,6 +46,7 @@ class MyApp : public BaseApp, public Singleton<MyApp>
 
 public:
 
+	bool IsLoginUser(uint64 uin);
 	void AddLoginUser(uint64 uin, uint16 zone_id);
 	void DisconUser(uint64 uin);
 	uint16 GetLeastUserZone(); 

@@ -32,7 +32,7 @@ bool UserMgr::Init()
 
 	for (uint32 i=0; i< G_CFG.user_num; ++i)
 	{//create all user
-		uint64 uin = G_CFG.user_uin_seg + i;
+		uint64 uin = G_CFG.user_uin_seg*10000 + i;
 		SimulateUser *p = new SimulateUser(uin);
 		m_uin_2_user[uin] = p;
 	}
@@ -53,14 +53,27 @@ void UserMgr::OnSecLoop()
 
 void UserMgr::On10SecLoop()
 {
+	//最近10秒采样统计
 	if (0 != m_ze_rti.total_cnt)
 	{
-		L_INFO("====zone echo rsp avarage interval.  %lld ms====", (m_ze_rti.total_wait_us / 1000) / m_ze_rti.total_cnt);
+		L_INFO("====zone 最近10秒采样，平均响应时间，总响应次数，总响应时间：%.2f ms %d %lld ====", double(m_ze_rti.total_wait_us / 1000) / m_ze_rti.total_cnt, m_ze_rti.total_cnt, m_ze_rti.total_wait_us);
 	}
 	if (0 != m_te_rti.total_cnt)
 	{
-		L_INFO("====team echo rsp avarage interval.  %lld ms====", (m_te_rti.total_wait_us / 1000) / m_te_rti.total_cnt);
+		L_INFO("====team 最近10秒采样，平均响应时间，总响应次数，总响应时间：%.2f ms %d %lld ====", double(m_te_rti.total_wait_us / 1000) / m_te_rti.total_cnt, m_te_rti.total_cnt, m_te_rti.total_wait_us);
 	}
+	m_all_rti.total_cnt += m_ze_rti.total_cnt;
+	m_all_rti.total_cnt += m_te_rti.total_cnt;
+	m_all_rti.total_wait_us += m_ze_rti.total_wait_us;
+	m_all_rti.total_wait_us += m_te_rti.total_wait_us;
+	//所有采样统计
+	L_INFO("====所有采样统计 平均响应时间，总响应次数：%.2f ms %d ====", double(m_all_rti.total_wait_us / 1000) / m_all_rti.total_cnt, m_all_rti.total_cnt);
+
+	m_ze_rti.total_cnt = 0;
+	m_ze_rti.total_wait_us = 0;
+	m_te_rti.total_cnt = 0;
+	m_te_rti.total_wait_us = 0;
+
 }
 
 SimulateUser::SimulateUser(uint64 uin)
@@ -79,7 +92,7 @@ void SimulateUser::Send(Cmd cmd, const google::protobuf::Message &msg)
 
 
 
-void SimulateUser::ReqZoneEchoFun()
+void SimulateUser::TryReqZoneEchoFun()
 {
 	L_COND(m_state == S_WAIT_ECHO);
 	if (m_zone_echo_cnt_ps >= G_CFG.zone.max_echo_num_ps)
@@ -94,7 +107,7 @@ void SimulateUser::ReqZoneEchoFun()
 	Send(CMD_ReqZoneEcho, req);
 }
 
-void SimulateUser::ReqTeamEchoFun()
+void SimulateUser::TryReqTeamEchoFun()
 {
 	L_COND(m_state == S_WAIT_ECHO);
 	if (m_team_echo_cnt_ps >= G_CFG.team.max_echo_num_ps)
@@ -107,6 +120,8 @@ void SimulateUser::ReqTeamEchoFun()
 	req.set_string(G_CFG.team.echo_str);
 	req.set_tm_us(CurTmUs());
 	Send(CMD_ReqTeamEcho, req);
+
+	//L_DEBUG("TryReqTeamEchoFun CurTmUs()=%lld", CurTmUs());
 }
 
 
@@ -124,8 +139,8 @@ void SimulateUser::OnSec()
 	m_team_echo_cnt_ps = 0;
 	if (m_state == S_WAIT_ECHO)
 	{
-		ReqZoneEchoFun();
-		ReqTeamEchoFun();
+		TryReqZoneEchoFun();
+		TryReqTeamEchoFun();
 	}
 }
 
@@ -168,7 +183,7 @@ void ClientConnecter::OnRecv(const lc::MsgPack &msg_pack)
 
 void ClientConnecter::OnConnected()
 {
-	L_DEBUG("OnConnected uin=%lld", m_user.m_uin);
+	//L_DEBUG("OnConnected uin=%lld", m_user.m_uin);
 	ReqLogin req;
 	req.set_user_uin(m_user.m_uin);
 	req.set_is_verify_ok(true);

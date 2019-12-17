@@ -56,10 +56,7 @@ void AccDriver::SendToClient(const acc::SessionId &id, ::Cmd cmd, const google::
 	bool r = msg.SerializeToString(&s);
 	L_COND(r, " msg.SerializeToString fail. ");
 
-	string msg_pack;
-	msg_pack.append((const char *)&cmd, sizeof(cmd));
-	msg_pack.append(s);
-	acc::ADFacadeMgr::SendToClient(id, cmd, msg_pack.c_str(), msg_pack.length());
+	acc::ADFacadeMgr::SendToClient(id, cmd, s.c_str(), s.length());
 }
 
 void AccDriver::OnRegResult(uint16 svr_id)

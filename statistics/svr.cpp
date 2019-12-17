@@ -8,6 +8,11 @@ using namespace ss;
 
 
 
+bool MyApp::IsLoginUser(uint64 uin)
+{
+	return nullptr != MapFind(m_uin_2_zoneid, uin);
+}
+
 void MyApp::AddLoginUser(uint64 uin, uint16 zone_id)
 {
 	COND(uin);
@@ -92,7 +97,7 @@ void MyApp::NtfStatistics(const NtfTeamStatistics &ntf)
 
 	{
 		uint64 bytes = (si.m_echo_total_bytes * 2) / ntf.use_sec();
-		L_INFO("====team per second, req_cnt=%d, bytes=%lld,==========bytes=rev and send bytes, ===", si.m_req_cnt/10, bytes);
+		L_INFO("====team 每秒响应请求数，收发字节数：%d,%lld, ===", si.m_req_cnt/ ntf.use_sec(), bytes );
 	}
 
 }
@@ -106,6 +111,7 @@ void MyApp::NtfStatistics(const NtfZoneStatistics &ntf)
 	EchoStaticsInfo &si = m_zoneid_2_si[ntf.zone_id()];
 	si.m_req_cnt = ntf.req_cnt();
 	si.m_echo_total_bytes = ntf.echo_total_bytes();
+
 }
 
 bool MyApp::OnStart()
@@ -135,12 +141,14 @@ void MyApp::On10Sec()
 		uint16 zoneid = v.first;
 		const EchoStaticsInfo &si = v.second;
 		uint64 bytes = (si.m_echo_total_bytes * 2) / 10;
-		uint32 cnt_ps = si.m_req_cnt / 10;
-		L_INFO("====zone avarage per second, zoneid, req, req_cnt, bytes=%x %d %lld,==========bytes=rev and send bytes, ===", zoneid, cnt_ps, bytes);
-		zone_total_cnt += cnt_ps;
+		uint32 cnt = si.m_req_cnt / 10;
+		L_INFO("====最近10秒采样， zoneid 每秒响应请求数，每秒收发字节数 %x %d %lld  ===", zoneid, cnt, bytes);
+		zone_total_cnt += cnt;
 		zone_total_bytes += bytes;
 	}
-	L_INFO("====all zone avarage per second, req_cnt, bytes=%d %lld,==========bytes=rev and send bytes, ===", zone_total_cnt, zone_total_bytes);
+	L_INFO("====最近10秒采样，所有zone 每秒响应请求数，每秒收发字节数 %d %lld ===", zone_total_cnt, zone_total_bytes);
+
+
 
 	//clear statistics info
 	m_zoneid_2_si.clear();
@@ -186,7 +194,7 @@ void AccDriver::OnClientDisCon(const Session &session)
 
 void AccDriver::OnRevClientMsg(const Session &session, uint32 cmd, const char *msg, uint16 msg_len)
 {
-	L_DEBUG("OnRevClientMsg cmd=%x", cmd);
+//	L_DEBUG("OnRevClientMsg cmd=%x", cmd);
 
 	HandleMsg *pHandle = MapFind(HandleMsgMap::Obj(), cmd);
 	if (nullptr == pHandle)
@@ -201,9 +209,17 @@ void AccDriver::OnRevClientMsg(const Session &session, uint32 cmd, const char *m
 
 void HCMD_ReqLoginZone(const Session &session, uint32 cmd, const char *msg, uint16 msg_len)
 {
-	L_DEBUG("HCMD_ReqLoginZone");
+	//L_DEBUG("HCMD_ReqLoginZone");
 	ReqLoginZone req;
 	L_COND(req.ParseFromArray(msg, msg_len));
+
+
+	if (MyApp::Obj().IsLoginUser(req.uin()))
+	{
+		L_ERROR("login user fail. repeated login. uin=%lld", req.uin());
+		AccDriver::Obj().DisconClient(session.id);
+		return;
+	}
 
 	uint16 zone_id = MyApp::Obj().GetLeastUserZone();
 	L_COND(zone_id);
@@ -211,7 +227,7 @@ void HCMD_ReqLoginZone(const Session &session, uint32 cmd, const char *msg, uint
 	{
 		MyApp::Obj().AddLoginUser(req.uin(), zone_id);
 		AccDriver::Obj().BroadcastUinToSession(session.id, req.uin());
-		//zone1 id ӳ�� ����zone id
+		//zone1 id 映射 任意zone id
 		AccDriver::Obj().SetMainCmd2Svr(session.id, ((ss::ST_ZONE<<8) + 1), zone_id);
 	}
 	//sent to client

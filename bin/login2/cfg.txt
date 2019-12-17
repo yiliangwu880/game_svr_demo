@@ -1,5 +1,10 @@
 acc_inner=[
-		{ip="127.0.0.1", port=6000}, 
-		{ip="127.0.0.1", port=6100},
-	]
-svr_id=0x1102
+	{ip="127.0.0.1", port=6000}, 
+	{ip="127.0.0.1", port=6100},
+]
+mf_svr=[
+	{ip="127.0.0.1", port=50001}, 
+	{ip="127.0.0.1", port=50002},
+]
+svr_id=0x1102   //SvrType<<8 + id, SvrType 必须和 ss.proto定义一致
+is_daemon = true //true表示后台运行

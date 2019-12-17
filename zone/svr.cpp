@@ -22,6 +22,7 @@ bool MyApp::OnStart()
 
 	L_COND_F(MfDriver::Obj().Init());
 
+	m_tm_10sec.StartTimer(10, std::bind(&MyApp::On10Sec, this), true);
 	return true;
 }
 void MyApp::StatisticEcho(uint64 msg_len)
@@ -53,10 +54,7 @@ void AccDriver::SendToClient(const acc::SessionId &id, ::Cmd cmd, const google::
 	bool r = msg.SerializeToString(&s);
 	L_COND(r, " msg.SerializeToString fail. ");
 
-	string msg_pack;
-	msg_pack.append((const char *)&cmd, sizeof(cmd));
-	msg_pack.append(s);
-	acc::ADFacadeMgr::SendToClient(id, cmd, msg_pack.c_str(), msg_pack.length());
+	acc::ADFacadeMgr::SendToClient(id, cmd, s.c_str(), s.length());
 }
 
 void AccDriver::OnRegResult(uint16 svr_id)
@@ -100,7 +98,7 @@ void HCMD_ReqZoneEcho(const Session &session, uint32 cmd, const char *msg, uint1
 	rsp.set_string(req.string());
 	rsp.set_tm_us(req.tm_us());
 
-	AccDriver::Obj().SendToClient(session.id, CMD_RspTeamEcho, rsp);
+	AccDriver::Obj().SendToClient(session.id, CMD_RspZoneEcho, rsp);
 	MyApp::Obj().StatisticEcho(rsp.ByteSize());
 }
 MAP_REG_DEFINE(HandleMsgMap, CMD_ReqZoneEcho, HCMD_ReqZoneEcho);

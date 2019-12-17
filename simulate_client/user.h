@@ -43,11 +43,11 @@ private:
 
 	}
 };
-//Í³¼ÆÆ½¾ùÏìÓ¦Ê±¼ä
+//ç»Ÿè®¡å¹³å‡å“åº”æ—¶é—´
 struct ReplyTimeInfo
 {
-	uint32 total_wait_us = 0;//µÈ´ı×ÜÊ± us,Î¢Ãë
-	uint32 total_cnt=0; //´ÎÊı
+	uint32 total_wait_us = 0;//ç­‰å¾…æ€»æ—¶ us,å¾®ç§’
+	uint32 total_cnt=0; //æ¬¡æ•°
 
 };
 class SimulateUser 
@@ -57,16 +57,16 @@ class SimulateUser
 	enum State
 	{
 		S_WAIT_LOGIN,
-		S_WAIT_ECHO,//µÈzone »ØÏÔ,
+		S_WAIT_ECHO,//ç­‰zone å›æ˜¾,
 	};
 
 	uint64 m_uin=0;
 	State m_state= S_WAIT_LOGIN;
 	Cmd m_cur_cmd=CMD_NONE;
 
-	uint32 m_zone_echo_cnt_ps = 0; //Ã¿ÃëechoÇëÇó´ÎÊı
+	uint32 m_zone_echo_cnt_ps = 0; //æ¯ç§’echoè¯·æ±‚æ¬¡æ•°
 
-	uint32 m_team_echo_cnt_ps = 0; //Ã¿ÃëechoÇëÇó´ÎÊı
+	uint32 m_team_echo_cnt_ps = 0; //æ¯ç§’echoè¯·æ±‚æ¬¡æ•°
 
 public:
 	ClientConnecter m_con;
@@ -75,9 +75,9 @@ public:
 	SimulateUser(uint64 uin);
 	void Send(Cmd cmd, const google::protobuf::Message &msg);
 	uint64 GetUin() { return m_uin; }
-	void ReqZoneEchoFun();
-	void ReqTeamEchoFun();
-	uint64 CurTmUs(); //µ±Ç°Î¢Ãë Ê±¼ä
+	void TryReqZoneEchoFun();
+	void TryReqTeamEchoFun();
+	uint64 CurTmUs(); //å½“å‰å¾®ç§’ æ—¶é—´
 
 	static void CMD_RspLogin(SimulateUser &user, const char *msg, uint16 msg_len);
 	static void CMD_RspZoneEcho(SimulateUser &user, const char *msg, uint16 msg_len);
@@ -95,16 +95,17 @@ class UserMgr : public Singleton<UserMgr>
 	su::Timer m_10sec_tm;
 
 public:
-	//Í³¼ÆÆ½¾ùÏìÓ¦Ê±¼ä
+	//ç»Ÿè®¡å¹³å‡å“åº”æ—¶é—´
 	ReplyTimeInfo m_ze_rti; //zone echo reply time info
 	ReplyTimeInfo m_te_rti; //team echo reply time info
+	ReplyTimeInfo m_all_rti; //æ€»å†å²ï¼Œä¸æ¸…0
 
 public:
 	~UserMgr();
 	bool Init();
 
 private:
-	//Ã¿ÃëÅÜÒ»´Î
+	//æ¯ç§’è·‘ä¸€æ¬¡
 	void OnSecLoop();
 	void On10SecLoop();
 };

@@ -27,7 +27,6 @@ struct cfg
 
 	////////////////////////define member list////////////////////////
 	S_acc_ex acc_ex;
-	uint16_t fowrad_echo_sec;
 	bool is_daemon;
 	uint16_t online_sec;
 	S_team team;
@@ -66,7 +65,6 @@ private:
 
 			acc_ex.ip = js["acc_ex"]["ip"];
 			acc_ex.port = js["acc_ex"]["port"];
-			fowrad_echo_sec = js["fowrad_echo_sec"];
 			is_daemon = js["is_daemon"];
 			online_sec = js["online_sec"];
 			team.echo_str = js["team"]["echo_str"];

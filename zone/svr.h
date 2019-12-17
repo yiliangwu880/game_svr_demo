@@ -35,8 +35,8 @@ private:
 class MyApp : public BaseApp, public Singleton<MyApp>
 {
 	su::Timer m_tm_10sec;
-	uint32 m_req_cnt; //处理请求次数
-	uint64 m_echo_total_bytes;//响应回显总字节数
+	uint32 m_req_cnt = 0; //处理请求次数
+	uint64 m_echo_total_bytes = 0;//响应回显总字节数
 
 public:
 
