@@ -32,7 +32,7 @@ bool UserMgr::Init()
 
 	for (uint32 i=0; i< G_CFG.user_num; ++i)
 	{//create all user
-		uint64 uin = G_CFG.user_uin_seg*10000 + i;
+		uint64 uin = G_CFG.user_uin_seg*10000 + i+1;
 		SimulateUser *p = new SimulateUser(uin);
 		m_uin_2_user[uin] = p;
 	}
