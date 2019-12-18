@@ -1,4 +1,5 @@
 #include "user.h"
+#include <cmath>
 
 using namespace std;
 using namespace su;
@@ -29,13 +30,9 @@ bool UserMgr::Init()
 
 	L_INFO("init UserMgr, user num=%d", G_CFG.user_num);
 	L_COND_F(G_CFG.user_num >= 1);
+	L_COND_F(G_CFG.user_num <= 10*10000);
 
-	for (uint32 i=0; i< G_CFG.user_num; ++i)
-	{//create all user
-		uint64 uin = G_CFG.user_uin_seg*10000 + i+1;
-		SimulateUser *p = new SimulateUser(uin);
-		m_uin_2_user[uin] = p;
-	}
+
 
 	m_sec_tm.StartTimer(1, std::bind(&UserMgr::OnSecLoop, this), true);
 	m_10sec_tm.StartTimer(10, std::bind(&UserMgr::On10SecLoop, this), true);
@@ -48,7 +45,7 @@ void UserMgr::OnSecLoop()
 	{
 		v.second->OnSec();
 	}
-
+	PartlyBuildClient();
 }
 
 void UserMgr::On10SecLoop()
@@ -74,6 +71,25 @@ void UserMgr::On10SecLoop()
 	m_te_rti.total_cnt = 0;
 	m_te_rti.total_wait_us = 0;
 
+}
+
+void UserMgr::PartlyBuildClient()
+{
+	L_COND(G_CFG.user_num >= m_uin_2_user.size());
+	uint32 build_num = G_CFG.user_num - m_uin_2_user.size();
+	build_num = ::min(build_num, (uint32)G_CFG.sec_max_create_num);
+	if (build_num==0)
+	{
+		return;
+	}
+	uint32 offset_uin = m_uin_2_user.size();
+	for (uint32 i = 0; i < build_num; ++i)
+	{//create part of user
+		uint64 uin = G_CFG.user_uin_seg * 10 * 10000 + offset_uin + i + 1;
+		SimulateUser *p = new SimulateUser(uin);
+		m_uin_2_user[uin] = p;
+	}
+	L_INFO("partly build user num=%d", build_num);
 }
 
 SimulateUser::SimulateUser(uint64 uin)

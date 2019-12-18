@@ -9,11 +9,11 @@ cd -
 mv ../bin/login1/*.h ../login/
 
 #statistics
-cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/statistics/
-cd ../bin/statistics
+cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/statistics1/
+cd ../bin/statistics1
 ./export_cpp_cfg cfg.txt
 cd -
-mv ../bin/statistics/*.h ../statistics/
+mv ../bin/statistics1/*.h ../statistics/
 
 #team
 cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/team/

@@ -29,6 +29,7 @@ struct cfg
 	S_acc_ex acc_ex;
 	bool is_daemon;
 	uint16_t online_sec;
+	uint16_t sec_max_create_num;
 	S_team team;
 	uint16_t user_num;
 	uint16_t user_uin_seg;
@@ -67,6 +68,7 @@ private:
 			acc_ex.port = js["acc_ex"]["port"];
 			is_daemon = js["is_daemon"];
 			online_sec = js["online_sec"];
+			sec_max_create_num = js["sec_max_create_num"];
 			team.echo_str = js["team"]["echo_str"];
 			team.max_echo_num_ps = js["team"]["max_echo_num_ps"];
 			user_num = js["user_num"];

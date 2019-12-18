@@ -108,6 +108,8 @@ private:
 	//每秒跑一次
 	void OnSecLoop();
 	void On10SecLoop();
+	//分批创建客户端
+	void PartlyBuildClient();
 };
 
 extern const cfg &G_CFG;

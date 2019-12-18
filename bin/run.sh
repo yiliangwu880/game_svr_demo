@@ -29,6 +29,12 @@ cd -
 cd acc2
 ./acc_svr
 cd -
+cd acc3
+./acc_svr
+cd -
+cd acc4
+./acc_svr
+cd -
 
 cd msg_forward1
 ./mf_svr
@@ -74,6 +80,12 @@ cd simulate_client1
 ./simulate_client
 cd -
 cd simulate_client2
+./simulate_client
+cd -
+cd simulate_client3
+./simulate_client
+cd -
+cd simulate_client4
 ./simulate_client
 cd -
 

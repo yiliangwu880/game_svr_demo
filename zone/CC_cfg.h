@@ -21,7 +21,7 @@ struct cfg
 
 
 	////////////////////////define member list////////////////////////
-	std::array<S_acc_inner,2> acc_inner;
+	std::array<S_acc_inner,4> acc_inner;
 	bool is_daemon;
 	std::array<S_mf_svr,2> mf_svr;
 	int16_t svr_id;
@@ -59,6 +59,10 @@ private:
 			acc_inner[0].port = js["acc_inner"][0]["port"];
 			acc_inner[1].ip = js["acc_inner"][1]["ip"];
 			acc_inner[1].port = js["acc_inner"][1]["port"];
+			acc_inner[2].ip = js["acc_inner"][2]["ip"];
+			acc_inner[2].port = js["acc_inner"][2]["port"];
+			acc_inner[3].ip = js["acc_inner"][3]["ip"];
+			acc_inner[3].port = js["acc_inner"][3]["port"];
 			is_daemon = js["is_daemon"];
 			mf_svr[0].ip = js["mf_svr"][0]["ip"];
 			mf_svr[0].port = js["mf_svr"][0]["port"];
