@@ -14,7 +14,7 @@ void SimulateUser::CMD_RspLogin(SimulateUser &user, const char *msg, uint16 msg_
 	RspLogin rsp;
 	L_COND(rsp.ParseFromArray(msg, msg_len));
 	L_COND(rsp.is_ok());
-	L_INFO("login ok. ReqLoginZone, uin=%lld", user.GetUin());
+	//L_INFO("login ok. ReqLoginZone, uin=%lld", user.GetUin());
 
 	ReqLoginZone req;
 	req.set_uin(user.GetUin());
@@ -74,7 +74,7 @@ void SimulateUser::CMD_RspLoginZone(SimulateUser &user, const char *msg, uint16 
 	RspLoginZone rsp;
 	L_COND(rsp.ParseFromArray(msg, msg_len));
 
-	L_INFO("login zone ok. uin=%lld", user.GetUin());
+	//L_INFO("login zone ok. uin=%lld", user.GetUin());
 	L_COND(user.m_state == S_WAIT_LOGIN);
 	user.m_state = S_WAIT_ECHO;
 

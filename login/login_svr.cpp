@@ -37,7 +37,7 @@ void AccDriver::OnRegResult(uint16 svr_id)
 void AccDriver::OnRevVerifyReq(const SessionId &id, uint32 cmd, const char *msg, uint16 msg_len)
 {
 	L_COND(MfDriver::Obj().IsCon(), "mf is not prepare");
-	L_INFO("handle verify");
+	//L_DEBUG("handle verify");
 	L_COND(cmd == CMD_ReqLogin);
 	ReqLogin req; 
 	L_COND(req.ParseFromArray(msg, msg_len));

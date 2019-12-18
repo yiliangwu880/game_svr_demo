@@ -1,6 +1,6 @@
 user_uin_seg=2	//用户id段。 公式 : user_id = user_id_seg*10000+偏移id
 acc_ex={ip="127.0.0.1", port=6101}	//acc 外部地址
-user_num=1
+user_num=1000
 online_sec=0    //在线多少秒，0表示永远在线
 zone={
 //echo 内容

@@ -47,12 +47,12 @@ sleep 1s
 cd zone1
 ./zone
 cd -
-#cd zone2
-#./zone
-#cd -
-#cd zone3
-#./zone
-#cd -
+cd zone2
+./zone
+cd -
+cd zone3
+./zone
+cd -
 
 cd team1
 ./team
@@ -61,9 +61,9 @@ cd -
 cd login1
 ./login
 cd -
-#cd login2
-#./login
-#cd -
+cd login2
+./login
+cd -
 
 sleep 1s 
 }
@@ -73,9 +73,9 @@ function StartClient(){
 cd simulate_client1
 ./simulate_client
 cd -
-#cd simulate_client2
-#./simulate_client
-#cd -
+cd simulate_client2
+./simulate_client
+cd -
 
 }
 function SimpleTest(){

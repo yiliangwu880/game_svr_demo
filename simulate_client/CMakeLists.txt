@@ -21,7 +21,7 @@ file(GLOB_RECURSE SRCS4  ${PROJECT_SOURCE_DIR} "../external/cpp_cfg/com/*.cpp")
 ADD_EXECUTABLE(${project_name} ${SRCS} ${SRCS2} ${SRCS3} ${SRCS4})
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/)
 #设置依赖
-#ADD_DEPENDENCIES(${project_name} svr_util libevent_cpp)
+ADD_DEPENDENCIES(${project_name} libprotobuf.a svr_util libcevent_cpp.a)
 
 # 设置链接库  libmysqlcppconn-static.a dl
 target_link_libraries(${project_name} libprotobuf.a svr_util libcevent_cpp.a)

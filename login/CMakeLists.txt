@@ -21,7 +21,7 @@ file(GLOB_RECURSE SRCS4  ${PROJECT_SOURCE_DIR} "../external/cpp_cfg/com/*.cpp")
 ADD_EXECUTABLE(${project_name} ${SRCS} ${SRCS2} ${SRCS3} ${SRCS4})
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/)
 #设置依赖
-#ADD_DEPENDENCIES(acc_driver cevent_cpp)
+ADD_DEPENDENCIES(${project_name} mf_driver mf_proto protobuf acc_driver acc_proto cevent_cpp svr_util)
 
 #未明：cevent_cpp必须放后面
 target_link_libraries(${project_name} mf_driver mf_proto protobuf acc_driver acc_proto cevent_cpp svr_util)

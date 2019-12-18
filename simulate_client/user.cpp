@@ -56,18 +56,18 @@ void UserMgr::On10SecLoop()
 	//最近10秒采样统计
 	if (0 != m_ze_rti.total_cnt)
 	{
-		L_INFO("====zone 最近10秒采样，平均响应时间，总响应次数，总响应时间：%.2f ms %d %lld ====", double(m_ze_rti.total_wait_us / 1000) / m_ze_rti.total_cnt, m_ze_rti.total_cnt, m_ze_rti.total_wait_us);
+		L_INFO("====zone 最近10秒采样，平均响应时间，总响应次数，总响应时间：%.2f ms %d k %lld us ====", double(m_ze_rti.total_wait_us / 1000) / m_ze_rti.total_cnt, m_ze_rti.total_cnt/1000, m_ze_rti.total_wait_us);
 	}
 	if (0 != m_te_rti.total_cnt)
 	{
-		L_INFO("====team 最近10秒采样，平均响应时间，总响应次数，总响应时间：%.2f ms %d %lld ====", double(m_te_rti.total_wait_us / 1000) / m_te_rti.total_cnt, m_te_rti.total_cnt, m_te_rti.total_wait_us);
+		L_INFO("====team 最近10秒采样，平均响应时间，总响应次数，总响应时间：%.2f ms %d k %lld us====", double(m_te_rti.total_wait_us / 1000) / m_te_rti.total_cnt, m_te_rti.total_cnt / 1000, m_te_rti.total_wait_us);
 	}
 	m_all_rti.total_cnt += m_ze_rti.total_cnt;
 	m_all_rti.total_cnt += m_te_rti.total_cnt;
 	m_all_rti.total_wait_us += m_ze_rti.total_wait_us;
 	m_all_rti.total_wait_us += m_te_rti.total_wait_us;
 	//所有采样统计
-	L_INFO("====所有采样统计 平均响应时间，总响应次数：%.2f ms %d ====", double(m_all_rti.total_wait_us / 1000) / m_all_rti.total_cnt, m_all_rti.total_cnt);
+	L_INFO("====所有采样统计 平均响应时间，总响应次数：%.2f ms %d k ====", double(m_all_rti.total_wait_us / 1000) / m_all_rti.total_cnt, m_all_rti.total_cnt/1000);
 
 	m_ze_rti.total_cnt = 0;
 	m_ze_rti.total_wait_us = 0;
