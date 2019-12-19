@@ -97,7 +97,7 @@ void MyApp::NtfStatistics(const NtfTeamStatistics &ntf)
 
 	{
 		uint64 bytes = (si.m_echo_total_bytes * 2) / ntf.use_sec();
-		L_INFO("====team 每秒响应请求数，收发字节数：%.2f k, %.2f kb, ===", double(si.m_req_cnt/ ntf.use_sec())/1000, double(bytes)/1024 );
+		L_INFO("====team 每秒响应请求数，收发字节数：%.2f k, %.2f Mb, ===", double(si.m_req_cnt/ ntf.use_sec())/1000, double(bytes)/ (1024 * 1024));
 	}
 
 }
@@ -142,11 +142,11 @@ void MyApp::On10Sec()
 		const EchoStaticsInfo &si = v.second;
 		uint64 bytes = (si.m_echo_total_bytes * 2) / 10;
 		uint32 cnt = si.m_req_cnt / 10;
-	L_INFO("====最近10秒采样，zoneid %x	每秒响应请求数，每秒收发字节数 %.2f k %.2f kb  ===", zoneid, double(cnt)/1000, double(bytes)/1024);
+	L_INFO("====最近10秒采样，zoneid %x	每秒响应请求数，每秒收发字节数 %.2f k %.2f Mb  ===", zoneid, double(cnt)/1000, double(bytes)/(1024*1024));
 		zone_total_cnt += cnt;
 		zone_total_bytes += bytes;
 	}
-	L_INFO("====最近10秒采样，所有zone	每秒响应请求数，每秒收发字节数 %.2f k %.2f kb ===", double(zone_total_cnt)/1000, double(zone_total_bytes)/1024);
+	L_INFO("====最近10秒采样，所有zone	每秒响应请求数，每秒收发字节数 %.2f k %.2f Mb ===", double(zone_total_cnt)/1000, double(zone_total_bytes)/ (1024 * 1024));
 
 
 

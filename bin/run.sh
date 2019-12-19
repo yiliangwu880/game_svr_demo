@@ -145,7 +145,7 @@ function stop(){
 if [ $# -lt 1 ];then
 	echo "run all"
 	StartServer
-	StartClient
+	#StartClient
 else
     echo "run submodue" $1
 	$1
