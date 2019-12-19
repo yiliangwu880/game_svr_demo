@@ -97,7 +97,7 @@ void MyApp::NtfStatistics(const NtfTeamStatistics &ntf)
 
 	{
 		uint64 bytes = (si.m_echo_total_bytes * 2) / ntf.use_sec();
-		L_INFO("====team 每秒响应请求数，收发字节数：%.2f k,%.2f kb, ===", double(si.m_req_cnt/ ntf.use_sec())/1000, double(bytes)/1024 );
+		L_INFO("====team 每秒响应请求数，收发字节数：%.2f k, %.2f kb, ===", double(si.m_req_cnt/ ntf.use_sec())/1000, double(bytes)/1024 );
 	}
 
 }

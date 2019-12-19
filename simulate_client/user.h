@@ -46,7 +46,7 @@ private:
 //统计平均响应时间
 struct ReplyTimeInfo
 {
-	uint32 total_wait_us = 0;//等待总时 us,微秒
+	uint64 total_wait_us = 0;//等待总时 us,微秒
 	uint32 total_cnt=0; //次数
 
 };

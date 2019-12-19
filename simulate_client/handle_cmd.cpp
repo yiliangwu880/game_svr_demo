@@ -56,9 +56,9 @@ void SimulateUser::CMD_RspTeamEcho(SimulateUser &user, const char *msg, uint16 m
 	L_COND(user.CurTmUs() > rsp.tm_us());
 	uint64 wait_us = user.CurTmUs() - rsp.tm_us();
 	//L_DEBUG("CMD_RspTeamEcho CurTmUs()=%lld, wait_us=%lld", user.CurTmUs(), wait_us);
-	if (wait_us /(1000*1000) > 30)//>10sec
+	if (wait_us /(1000*1000) > 10)//>10sec
 	{
-		L_ERROR("rsp wait too long. > 30 second");
+		L_ERROR("rsp wait too long. > 10 second");
 		return;
 	}
 	//L_DEBUG("CMD_RspTeamEcho wait_us=%lld", wait_us);

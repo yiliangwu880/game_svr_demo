@@ -16,11 +16,11 @@ cd -
 mv ../bin/statistics1/*.h ../statistics/
 
 #team
-cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/team/
-cd ../bin/team
+cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/team1/
+cd ../bin/team1
 ./export_cpp_cfg cfg.txt
 cd -
-mv ../bin/team/*.h ../team/
+mv ../bin/team1/*.h ../team/
 
 #zone
 cp ../external/cpp_cfg/bin/export_cpp_cfg ../bin/zone1/
