@@ -21,9 +21,9 @@ struct cfg
 
 
 	////////////////////////define member list////////////////////////
-	std::array<S_acc_inner,4> acc_inner;
+	std::vector<S_acc_inner> acc_inner;
 	bool is_daemon;
-	std::array<S_mf_svr,2> mf_svr;
+	std::vector<S_mf_svr> mf_svr;
 	int16_t svr_id;
 
 	////////////////////////method list////////////////////////
@@ -55,19 +55,19 @@ private:
 		try
 		{
 
-			acc_inner[0].ip = js["acc_inner"][0]["ip"];
-			acc_inner[0].port = js["acc_inner"][0]["port"];
-			acc_inner[1].ip = js["acc_inner"][1]["ip"];
-			acc_inner[1].port = js["acc_inner"][1]["port"];
-			acc_inner[2].ip = js["acc_inner"][2]["ip"];
-			acc_inner[2].port = js["acc_inner"][2]["port"];
-			acc_inner[3].ip = js["acc_inner"][3]["ip"];
-			acc_inner[3].port = js["acc_inner"][3]["port"];
+			for (size_t i = 0; i < js["acc_inner"].size(); ++i)
+			{
+				acc_inner.push_back({});
+				acc_inner[i].ip = js["acc_inner"][i]["ip"];
+				acc_inner[i].port = js["acc_inner"][i]["port"];
+			}
 			is_daemon = js["is_daemon"];
-			mf_svr[0].ip = js["mf_svr"][0]["ip"];
-			mf_svr[0].port = js["mf_svr"][0]["port"];
-			mf_svr[1].ip = js["mf_svr"][1]["ip"];
-			mf_svr[1].port = js["mf_svr"][1]["port"];
+			for (size_t i = 0; i < js["mf_svr"].size(); ++i)
+			{
+				mf_svr.push_back({});
+				mf_svr[i].ip = js["mf_svr"][i]["ip"];
+				mf_svr[i].port = js["mf_svr"][i]["port"];
+			}
 			svr_id = js["svr_id"];
 
 
