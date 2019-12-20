@@ -1,15 +1,15 @@
 user_uin_seg=3	//用户id段。 公式 : user_id = user_id_seg*10*10000+偏移id
 acc_ex={ip="127.0.0.1", port=6201}	//acc 外部地址
-user_num=20000
+user_num=2000
 online_sec=0    //在线多少秒，0表示永远在线
 zone={
-//echo 内容
-echo_str="abcxxxxxxxxxxxxxxxxxdkxxxxxxxxxxxxxxxxxxxxxxdfdfxxxxxxxxxxxxxxxxxdffffffffffffffffffffffffffffffffff"
+//echo 字符串长度
+echo_str_len=1024
 max_echo_num_ps=5 //每秒最多x次请求echo
 }
 team={
-//echo 内容
-echo_str="1234567890"
+//echo 字符串长度
+echo_str_len=1024
 max_echo_num_ps=1 //每秒最多x次请求echo
 }
 is_daemon=true

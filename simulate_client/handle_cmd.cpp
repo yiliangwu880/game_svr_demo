@@ -27,7 +27,7 @@ void SimulateUser::CMD_RspZoneEcho(SimulateUser &user, const char *msg, uint16 m
 {
 	RspZoneEcho rsp;
 	L_COND(rsp.ParseFromArray(msg, msg_len));
-	L_COND(rsp.string().length() == G_CFG.zone.echo_str.length());
+	L_COND(rsp.string().length() == G_CFG.zone.echo_str_len);
 
 	L_COND(user.m_state == S_WAIT_ECHO);
 	//L_INFO("rev zone echo. uin=%lld", user.GetUin());
@@ -49,7 +49,7 @@ void SimulateUser::CMD_RspTeamEcho(SimulateUser &user, const char *msg, uint16 m
 {
 	RspTeamEcho rsp;
 	L_COND(rsp.ParseFromArray(msg, msg_len));
-	L_COND(rsp.string().length() == G_CFG.team.echo_str.length());
+	L_COND(rsp.string().length() == G_CFG.team.echo_str_len);
 	L_COND(user.m_state == S_WAIT_ECHO);
 	//L_INFO("rev team echo. uin=%lld", user.GetUin());
 

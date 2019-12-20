@@ -117,8 +117,9 @@ void SimulateUser::TryReqZoneEchoFun()
 	}
 	m_zone_echo_cnt_ps++;
 
+	string str(G_CFG.zone.echo_str_len, 'a');
 	ReqZoneEcho req;
-	req.set_string(G_CFG.zone.echo_str);
+	req.set_string(str);
 	req.set_tm_us(CurTmUs());
 	Send(CMD_ReqZoneEcho, req);
 }
@@ -131,9 +132,9 @@ void SimulateUser::TryReqTeamEchoFun()
 		return;
 	}
 	m_team_echo_cnt_ps++;
-
+	string str(G_CFG.team.echo_str_len, 'a');
 	ReqTeamEcho req;
-	req.set_string(G_CFG.team.echo_str);
+	req.set_string(str);
 	req.set_tm_us(CurTmUs());
 	Send(CMD_ReqTeamEcho, req);
 

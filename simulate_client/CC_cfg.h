@@ -15,12 +15,12 @@ struct cfg
 	};
 	struct S_team
 	{
-		std::string echo_str;
+		uint16_t echo_str_len;
 		uint16_t max_echo_num_ps;
 	};
 	struct S_zone
 	{
-		std::string echo_str;
+		uint16_t echo_str_len;
 		uint16_t max_echo_num_ps;
 	};
 
@@ -69,11 +69,11 @@ private:
 			is_daemon = js["is_daemon"];
 			online_sec = js["online_sec"];
 			sec_max_create_num = js["sec_max_create_num"];
-			team.echo_str = js["team"]["echo_str"];
+			team.echo_str_len = js["team"]["echo_str_len"];
 			team.max_echo_num_ps = js["team"]["max_echo_num_ps"];
 			user_num = js["user_num"];
 			user_uin_seg = js["user_uin_seg"];
-			zone.echo_str = js["zone"]["echo_str"];
+			zone.echo_str_len = js["zone"]["echo_str_len"];
 			zone.max_echo_num_ps = js["zone"]["max_echo_num_ps"];
 
 

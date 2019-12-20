@@ -97,7 +97,8 @@ void HCMD_ReqTeamEcho(const Session &session, uint32 cmd, const char *msg, uint1
 	RspTeamEcho rsp;
 	rsp.set_string(req.string());
 	rsp.set_tm_us(req.tm_us());
-
+	
+	L_COND((uint32)rsp.ByteSize() == rsp.SerializeAsString().length());
 	AccDriver::Obj().SendToClient(session.id, CMD_RspTeamEcho, rsp);
 	MyApp::Obj().StatisticEcho(rsp.ByteSize());
 }
